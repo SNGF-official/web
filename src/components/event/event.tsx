@@ -50,7 +50,7 @@ const events = [
 ];
 
 export function EventCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [, setCurrentIndex] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const carouselRef = useRef<CarouselApi | null>(null);
 
@@ -70,7 +70,8 @@ export function EventCarousel() {
     };
   }, [isUserInteracting, carouselRef]);
 
-  const handleSelect = useCallback((api: CarouselApi) => {
+  const handleSelect = useCallback((api?: CarouselApi) => {
+    if (!api) return;
     setCurrentIndex(api.selectedScrollSnap());
     setIsUserInteracting(false);
   }, []);
