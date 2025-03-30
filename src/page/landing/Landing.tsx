@@ -14,21 +14,15 @@ const Landing = (): JSX.Element => {
     },
     {
       id: 'A propos',
-      component: (
-          <About/>
-      ),
+      component: <About />,
     },
     {
       id: 'Evenement',
-      component: (
-        <EventCarousel/>
-      ),
+      component: <EventCarousel />,
     },
     {
       id: 'Boutique',
-      component: (
-        <ShopSection/>
-      ),
+      component: <ShopSection />,
     },
     {
       id: 'footer',
@@ -38,7 +32,7 @@ const Landing = (): JSX.Element => {
 
   return (
     <div className="relative bg-[var(--bg-color)] h-screen overflow-x-hidden flex flex-col scroll-smooth">
-      <NavigationBar/>
+      <NavigationBar />
       <div className="flex flex-col flex-grow">
         {sections.map((section) => (
           <div key={section.id} id={section.id} className="w-full">

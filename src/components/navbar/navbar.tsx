@@ -20,7 +20,9 @@ export const NavigationBar: React.FC = (): JSX.Element => {
         </div>
 
         {/* Menu Burger (Mobile) */}
-        <div className="flex lg:hidden"> {/* Rendre visible jusqu'à la taille lg */}
+        <div className="flex lg:hidden">
+          {' '}
+          {/* Rendre visible jusqu'à la taille lg */}
           <button
             type="button"
             className="text-gray-800 focus:outline-none"
@@ -62,7 +64,9 @@ export const NavigationBar: React.FC = (): JSX.Element => {
         </div>
 
         {/* Menu Desktop */}
-        <nav className="hidden lg:flex md:items-center md:space-x-12"> {/* Cacher jusqu'à la taille lg */}
+        <nav className="hidden lg:flex md:items-center md:space-x-12">
+          {' '}
+          {/* Cacher jusqu'à la taille lg */}
           {navList.map((item) => (
             <a
               key={item}
@@ -77,7 +81,9 @@ export const NavigationBar: React.FC = (): JSX.Element => {
 
       {/* Menu Mobile */}
       {expanded && (
-        <nav className="lg:hidden bg-white shadow-lg"> {/* Visible uniquement jusqu'à la taille lg */}
+        <nav className="lg:hidden bg-white shadow-lg">
+          {' '}
+          {/* Visible uniquement jusqu'à la taille lg */}
           <div className="flex flex-col items-center py-4 space-y-4">
             {navList.map((item) => (
               <a

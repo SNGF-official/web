@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -7,45 +7,45 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from "@/components/ui/carousel";
+} from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button.tsx';
-import ImageTest from "@/assets/product.png"; // Placeholder image
+import ImageTest from '@/assets/product.png'; // Placeholder image
 
 const events = [
   {
-    title: "Foire Agricole 2025",
+    title: 'Foire Agricole 2025',
     image: ImageTest,
-    date: "15 Avril 2025",
-    description: "Découvrez les dernières innovations en agriculture.",
-    link: "#",
+    date: '15 Avril 2025',
+    description: 'Découvrez les dernières innovations en agriculture.',
+    link: '#',
   },
   {
-    title: "Conférence Écologie",
+    title: 'Conférence Écologie',
     image: ImageTest,
-    date: "20 Mai 2025",
-    description: "Les experts discutent des défis environnementaux.",
-    link: "#",
+    date: '20 Mai 2025',
+    description: 'Les experts discutent des défis environnementaux.',
+    link: '#',
   },
   {
-    title: "Marché Bio Local",
+    title: 'Marché Bio Local',
     image: ImageTest,
-    date: "5 Juin 2025",
-    description: "Produits bio et circuits courts en vedette.",
-    link: "#",
+    date: '5 Juin 2025',
+    description: 'Produits bio et circuits courts en vedette.',
+    link: '#',
   },
   {
-    title: "Atelier Plantation",
+    title: 'Atelier Plantation',
     image: ImageTest,
-    date: "12 Juillet 2025",
-    description: "Apprenez à cultiver vos propres plantes.",
-    link: "#",
+    date: '12 Juillet 2025',
+    description: 'Apprenez à cultiver vos propres plantes.',
+    link: '#',
   },
   {
-    title: "Expo Fleurs & Arbres",
+    title: 'Expo Fleurs & Arbres',
     image: ImageTest,
-    date: "25 Août 2025",
-    description: "Un festival dédié à la nature et au jardinage.",
-    link: "#",
+    date: '25 Août 2025',
+    description: 'Un festival dédié à la nature et au jardinage.',
+    link: '#',
   },
 ];
 
@@ -89,15 +89,20 @@ export function EventCarousel() {
         <Carousel
           setApi={handleSetApi}
           opts={{
-            align: "center",
+            align: 'center',
             loop: true,
           }}
           className="relative w-full"
-          onSelect={() => carouselRef.current && handleSelect(carouselRef.current)}
+          onSelect={() =>
+            carouselRef.current && handleSelect(carouselRef.current)
+          }
         >
           <CarouselContent className="-ml-4 md:-ml-6">
             {events.map((event, index) => (
-              <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3 px-4 md:px-6">
+              <CarouselItem
+                key={index}
+                className="basis-full md:basis-1/2 lg:basis-1/3 px-4 md:px-6"
+              >
                 <Card className="bg-white rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-green-950 transition-shadow duration-300">
                   <div className="relative h-60 sm:h-72">
                     <img
@@ -112,7 +117,9 @@ export function EventCarousel() {
                         {event.title}
                       </h3>
                       <p className="text-sm text-gray-500 mt-2">{event.date}</p>
-                      <p className="text-gray-700 mt-3 line-clamp-3">{event.description}</p>
+                      <p className="text-gray-700 mt-3 line-clamp-3">
+                        {event.description}
+                      </p>
                     </div>
                     <Button
                       className="cursor-pointer mt-4 bg-[var(--base-green)] text-white focus:ring-indigo-500"
@@ -126,10 +133,18 @@ export function EventCarousel() {
             ))}
           </CarouselContent>
           <div className="absolute inset-y-0 left-0 flex items-center">
-            <CarouselPrevious className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -ml-6 md:-ml-8" size="icon" variant="outline" />
+            <CarouselPrevious
+              className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -ml-6 md:-ml-8"
+              size="icon"
+              variant="outline"
+            />
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center">
-            <CarouselNext className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -mr-6 md:-mr-8" size="icon" variant="outline" />
+            <CarouselNext
+              className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -mr-6 md:-mr-8"
+              size="icon"
+              variant="outline"
+            />
           </div>
         </Carousel>
       </div>
