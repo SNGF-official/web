@@ -1,5 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
+import React from 'react';
+
+interface SectionSeparatorProps {
+  children?: React.ReactNode;
+  bgColor?: string;
+  marginTop?: string;
+  pbSm?: string;
+  pbLg?: string;
+  pbXl?: string;
+  minHeight?: string;
+}
+
 const SectionSeparator = ({
   children,
   bgColor = 'var(--bg-color)',
@@ -8,7 +18,7 @@ const SectionSeparator = ({
   pbLg = 'lg:pb-20',
   pbXl = 'xl:pb-24',
   minHeight = 'h-[100vh]',
-}) => {
+}: SectionSeparatorProps) => {
   return (
     <div className="relative w-full flex items-center justify-center">
       <section
