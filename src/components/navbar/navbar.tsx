@@ -14,13 +14,13 @@ export const NavigationBar: React.FC = (): JSX.Element => {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <div className="shrink-0">
-          <a href="" title="Logo" className="flex">
+          <a href="#hero" title="Logo" className="flex">
             <img src={LogoImage} alt="Logo" className="w-auto h-16" />
           </a>
         </div>
 
         {/* Menu Burger (Mobile) */}
-        <div className="flex md:hidden">
+        <div className="flex lg:hidden"> {/* Rendre visible jusqu'à la taille lg */}
           <button
             type="button"
             className="text-gray-800 focus:outline-none"
@@ -62,7 +62,7 @@ export const NavigationBar: React.FC = (): JSX.Element => {
         </div>
 
         {/* Menu Desktop */}
-        <nav className="hidden md:flex md:items-center md:space-x-12">
+        <nav className="hidden lg:flex md:items-center md:space-x-12"> {/* Cacher jusqu'à la taille lg */}
           {navList.map((item) => (
             <a
               key={item}
@@ -77,7 +77,7 @@ export const NavigationBar: React.FC = (): JSX.Element => {
 
       {/* Menu Mobile */}
       {expanded && (
-        <nav className="md:hidden bg-white shadow-lg">
+        <nav className="lg:hidden bg-white shadow-lg"> {/* Visible uniquement jusqu'à la taille lg */}
           <div className="flex flex-col items-center py-4 space-y-4">
             {navList.map((item) => (
               <a
