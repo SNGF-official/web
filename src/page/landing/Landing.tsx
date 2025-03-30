@@ -2,13 +2,11 @@ import { JSX } from 'react';
 import { HeroSection } from '@/components/hero/hero.tsx';
 import { NavigationBar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { UseScreenSize } from '@/hooks/useScreenContext';
 import { About } from '@/components/about';
 import { EventCarousel } from '@/components/event';
+import { ShopSection } from '@/components/shop/shop.tsx';
 
 const Landing = (): JSX.Element => {
-  const { isDesktop } = UseScreenSize();
-
   const sections = [
     {
       id: 'hero',
@@ -27,14 +25,9 @@ const Landing = (): JSX.Element => {
       ),
     },
     {
-      id: 'boutique',
+      id: 'Boutique',
       component: (
-        <div
-          id="Boutique"
-          className={`w-full flex items-center justify-center min-h-screen ${isDesktop ? 'bg-blue-800' : 'bg-blue-700'} text-white text-3xl`}
-        >
-          Boutique
-        </div>
+        <ShopSection/>
       ),
     },
     {
