@@ -7,3 +7,6 @@
   --text-white: #faf1f1;
   --text-black: #030303;
 }
+body {
+    overflow-x: hidden;
+}
