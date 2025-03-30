@@ -70,16 +70,6 @@ export function EventCarousel() {
     };
   }, [isUserInteracting, carouselRef]);
 
-  const handlePrev = () => {
-    setIsUserInteracting(true);
-    carouselRef.current?.scrollPrev();
-  };
-
-  const handleNext = () => {
-    setIsUserInteracting(true);
-    carouselRef.current?.scrollNext();
-  };
-
   const handleSelect = useCallback((api: CarouselApi) => {
     setCurrentIndex(api.selectedScrollSnap());
     setIsUserInteracting(false);
