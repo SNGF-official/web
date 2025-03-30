@@ -3,9 +3,11 @@ import { HeroSection } from '@/components/hero/hero.tsx';
 import { NavigationBar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { UseScreenSize } from '@/hooks/useScreenContext';
+import { About } from '@/components/about';
+import { EventCarousel } from '@/components/event';
 
 const Landing = (): JSX.Element => {
-  const { isMobile, isTablet, isDesktop } = UseScreenSize();
+  const { isDesktop } = UseScreenSize();
 
   const sections = [
     {
@@ -13,25 +15,15 @@ const Landing = (): JSX.Element => {
       component: <HeroSection />,
     },
     {
-      id: 'about',
+      id: 'A propos',
       component: (
-        <div
-          id="A propos"
-          className={`w-full flex items-center justify-center min-h-screen ${isMobile ? 'bg-green-400' : 'bg-green-500'} text-white text-3xl`}
-        >
-          À Propos
-        </div>
+          <About/>
       ),
     },
     {
-      id: 'events',
+      id: 'Evenement',
       component: (
-        <div
-          id="Evenements"
-          className={`w-full flex items-center justify-center min-h-screen ${isTablet ? 'bg-red-600' : 'bg-red-500'} text-white text-3xl`}
-        >
-          Liste Événements
-        </div>
+        <EventCarousel/>
       ),
     },
     {
@@ -56,7 +48,7 @@ const Landing = (): JSX.Element => {
       <NavigationBar/>
       <div className="flex flex-col flex-grow">
         {sections.map((section) => (
-          <div key={section.id} className="w-full">
+          <div key={section.id} id={section.id} className="w-full">
             {section.component}
           </div>
         ))}
