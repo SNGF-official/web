@@ -39,7 +39,7 @@ const ShopSection: React.FC = () => {
                 size="lg"
                 className="cursor-pointer bg-[var(--base-green)] hover:bg-green-700 text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
               >
-                Voir boutique
+                <a href="/shop">Voir boutique</a>
               </Button>
               <Button
                 variant="outline"
