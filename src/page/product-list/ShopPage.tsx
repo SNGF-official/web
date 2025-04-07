@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { NavigationBar } from '@/components/navbar';
 
 const ShopPage = () => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
   const [filterAvailability, setFilterAvailability] =
@@ -25,7 +25,7 @@ const ShopPage = () => {
   };
 
   const resetSelection = () => {
-    setSelectedProduct(null);
+    setSelectedProduct(undefined);
     setShowModal(false);
   };
 

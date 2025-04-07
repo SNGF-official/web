@@ -4,7 +4,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { Product } from '@/lib/products.ts';
 
 interface ProductDetailProps {
-  product: Product;
+  product?: Product;
   open: boolean;
   onClose: () => void;
 }
@@ -13,8 +13,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
   const [current, setCurrent] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const nextSlide = () => { setCurrent((prev) => (prev + 1) % product.images.length); };
-  const prevSlide = () => { setCurrent((prev) => (prev === 0 ? product.images.length - 1 : prev - 1)); };
+  const nextSlide = () => { if(product) setCurrent((prev) => (prev + 1) % product.images.length); };
+  const prevSlide = () => { if(product) setCurrent((prev) => (prev === 0 ? product.images.length - 1 : prev - 1)); };
   const handleDotClick = (index: number) => { setCurrent(index); };
 
   return (
@@ -35,8 +35,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
       {/* Slideshow */}
       <div className="relative h-64 mb-4 rounded-lg overflow-hidden">
         <img
-          src={product.images[current]}
-          alt={product.name}
+          src={product?.images[current]}
+          alt={product?.name}
           className="w-full h-full object-cover transition-all duration-500"
         />
         <button
@@ -53,7 +53,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
         </button>
 
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-          {product.images.map((_, index) => (
+          {product?.images.map((_, index) => (
             <button
               key={index}
               onClick={() => { handleDotClick(index); }}
@@ -66,8 +66,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
       </div>
 
       {/* Infos produit */}
-      <h2 className="text-2xl font-bold text-emerald-900 mb-2">{product.name}</h2>
-      <p className="text-gray-700 mb-4">{product.description}</p>
+      <h2 className="text-2xl font-bold text-emerald-900 mb-2">{product?.name}</h2>
+      <p className="text-gray-700 mb-4">{product?.description}</p>
 
       {/* Quantité */}
       <div className="flex items-center gap-4 mb-4">
@@ -84,13 +84,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
         >
           +
         </button>
-        <span className="text-gray-600">/ {product.availability} dispo</span>
+        <span className="text-gray-600">/ {product?.availability} dispo</span>
       </div>
 
       {/* Prix + Commander */}
       <div className="flex items-center justify-between">
         <span className="text-xl font-bold text-emerald-700">
-          {product.price} Ar
+          {product?.price} Ar
         </span>
         <button className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
           <FaShoppingCart />
