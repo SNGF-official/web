@@ -18,6 +18,11 @@ jobs:
           repository: SNGF-official/API
           path: api-spec
 
+      - name: Install OpenAPI Generator CLI
+        run: |
+          curl -L https://github.com/OpenAPITools/openapi-generator/releases/download/v6.0.0/openapi-generator-cli-v6.0.0.jar -o openapi-generator-cli.jar
+          alias openapi-generator-cli="java -jar openapi-generator-cli.jar"
+
       - name: Generate client with OpenAPI Generator
         run: |
           openapi-generator-cli generate -i api-spec/openapi.yaml -g typescript-fetch -o ./generated-client
