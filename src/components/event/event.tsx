@@ -1,3 +1,4 @@
+import { EventSortBy, getFilteredEvents } from '@/lib';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -9,7 +10,8 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button.tsx';
-import ImageTest from '@/assets/product.png'; // Placeholder image
+import ImageTest from '@/assets/product.png';
+import { EventFilters } from '@/components/eventFilter.tsx'; // Placeholder image
 
 const events = [
   {
@@ -50,6 +52,8 @@ const events = [
 ];
 
 export function EventCarousel() {
+  const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<EventSortBy>('date-asc');
   const [, setCurrentIndex] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const carouselRef = useRef<CarouselApi | null>(null);
@@ -80,13 +84,19 @@ export function EventCarousel() {
     <div className="h-[100vh] relative w-full flex flex-col justify-center items-center py-16 sm:py-24 bg-gradient-to-br from-gray-100 to-gray-200">
       <div className="max-w-7xl mx-auto text-center mb-12">
         <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Événements à venir
+          Événements
         </h2>
         <p className="mt-3 text-lg text-gray-500 sm:mt-4">
           Ne manquez pas nos prochains événements passionnants.
         </p>
       </div>
       <div className="relative w-full max-w-7xl mx-auto">
+        <EventFilters
+          search={search}
+          setSearch={setSearch}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
         <Carousel
           setApi={handleSetApi}
           opts={{
@@ -99,7 +109,7 @@ export function EventCarousel() {
           }
         >
           <CarouselContent className="-ml-4 md:-ml-6">
-            {events.map((event, index) => (
+            {getFilteredEvents(events, search, sortBy).map((event, index) => (
               <CarouselItem
                 key={index}
                 className="basis-full md:basis-1/2 lg:basis-1/3 px-4 md:px-6"
