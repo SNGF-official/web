@@ -37,7 +37,7 @@ const ShopPage = () => {
   );
 
   return (
-    <div>
+    <>
       <NavigationBar />
     <div className="relative min-h-screen bg-white flex">
       {/* Sidebar desktop */}
@@ -119,7 +119,7 @@ const ShopPage = () => {
         </div>
       )}
     </div>
-    </div>
+    </>
   );
 };
 

@@ -6,46 +6,33 @@ import Seed from '@/assets/seed.jpg';
 const posts = [
   {
     image: QGImage,
-    date: 'Mar 16, 2020',
-    category: 'Marketing',
-    title: 'Boost your conversion rate',
+    title: 'Une mission enracinée dans l’histoire',
     description:
-      'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo.',
-    author: 'Michael Foster',
-    role: 'Co-Founder / CTO',
-  },
-  {
-    image: Tree,
-    date: 'Mar 10, 2020',
-    category: 'Sales',
-    title: 'How to use search engine optimization to drive sales',
-    description:
-      'Optio cum necessitatibus dolor voluptatem provident commodi et. Qui aperiam fugiat nemo cumque.',
-    author: 'Lindsay Walton',
-    role: 'Front-end Developer',
+      'Créé en 2004, le Silo National des Graines Forestières (SNGF) a pour objectif de préserver les ressources génétiques forestières de Madagascar. Sous la présidence de Madame Sahondra RAZANAMAHASOA, le SNGF œuvre au service de l’environnement et du développement durable.',
   },
   {
     image: Seed,
-    date: 'Feb 12, 2020',
-    category: 'Business',
-    title: 'Improve your customer experience',
+    title: 'Des semences et plants de qualité',
     description:
-      'Cupiditate maiores ullam eveniet adipisci in doloribus nulla minus. Voluptas libero adipisci rem et corporis.',
-    author: 'Tom Cook',
-    role: 'Director of Product',
+      'Le SNGF met à disposition du public des graines forestières certifiées, adaptées aux différentes régions climatiques de Madagascar. Des jeunes plants d’espèces natives et exotiques sont également disponibles pour les particuliers, les ONG et les projets de reboisement.',
+  },
+  {
+    image: Tree,
+    title: 'Une diversité d’activités au cœur de la forêt',
+    description:
+      'Outre la conservation des semences, le SNGF mène des recherches scientifiques, appuie les campagnes de reboisement, forme les acteurs du secteur et sensibilise à la gestion durable des ressources forestières.',
   },
 ];
 
 const About: React.FC = () => {
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-screen bg-[var(--base-green)] py-24 sm:py-32 px-6 lg:px-8">
+    <div className="w-full flex flex-col items-center justify-center min-h-screen bg-white py-24 sm:py-32 px-6 lg:px-8">
       <div className="max-w-3xl text-center">
-        <h2 className="text-4xl font-bold text-white sm:text-5xl">
+        <h2 className="text-4xl font-bold text-[var(--base-green)] sm:text-5xl">
           SNGF, C'est Quoi?
         </h2>
-        <p className="mt-4 text-lg text-white">
-          Vous trouverez ici ce que vous recherchez en matière de graine et
-          d'arbre de n'importe quel espèce
+        <p className="mt-4 text-lg text-[var(--base-green)]">
+          Découvrez le rôle essentiel du Silo National des Graines Forestières dans la préservation, la valorisation et la diffusion des semences forestières à Madagascar.
         </p>
       </div>
 
@@ -53,18 +40,20 @@ const About: React.FC = () => {
         {posts.map((post, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-lg object-fill overflow-hidden"
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
           >
             <img
               src={post.image}
               alt={post.title}
-              className="w-full h-60 max-h-48 object-cover"
+              className="w-full h-60 object-cover"
             />
             <div className="p-6">
               <h3 className="mt-2 text-lg font-semibold text-gray-900">
                 {post.title}
               </h3>
-              <p className="mt-2 text-gray-700">{post.description}</p>
+              <p className="mt-2 text-gray-700">
+                {post.description}
+              </p>
             </div>
           </div>
         ))}

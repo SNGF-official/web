@@ -2,12 +2,16 @@ import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { Loader } from '@/components/loading';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { ShopPage } from '@/page/product-list';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 const LandingPage = lazy(() =>
   import('./page/landing/Landing.tsx').then((module) => ({
     default: module.Landing,
+  }))
+);
+const ShopPage = lazy(() =>
+  import('./page/product-list/ShopPage.tsx').then((module) => ({
+    default: module.ShopPage,
   }))
 );
 
@@ -17,7 +21,8 @@ createRoot(document.getElementById('root')!).render(
     <Router>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<LandingPage />} />
           <Route path="/shop" element={<ShopPage />} />
         </Routes>
       </Suspense>

@@ -3,6 +3,7 @@
 
 :root {
   --base-green: #255f38;
+  --bg-green: rgba(37, 95, 56, 0.93);
   --bg-color: #fbfbfb;
   --text-white: #faf1f1;
   --text-black: #030303;

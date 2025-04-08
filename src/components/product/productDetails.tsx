@@ -23,7 +23,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
       animate={{ x: open ? 0 : '100%' }}
       exit={{ x: '100%' }}
       transition={{ duration: 0.4 }}
-      className="fixed top-0 right-0 w-full md:w-[50vw] h-screen bg-white shadow-lg z-50 p-6 overflow-y-auto"
+      className="fixed right-0 w-full md:w-[50vw] h-screen bg-white shadow-lg z-100 p-6 overflow-y-auto"
     >
       <button
         onClick={onClose}

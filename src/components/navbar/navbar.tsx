@@ -3,7 +3,7 @@ import LogoImage from '@/assets/logo.png';
 
 export const NavigationBar: React.FC = (): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
-  const navList = ['A propos', 'Evenement', 'Boutique', 'Support', 'Blog'];
+  const navList = ['A propos', 'Evenement', 'Boutique', 'FAQ', 'Blog'];
 
   const handleToggleMenuBurger = () => {
     setExpanded((prevState) => !prevState);
@@ -14,7 +14,7 @@ export const NavigationBar: React.FC = (): JSX.Element => {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <div className="shrink-0">
-          <a href="#hero" title="Logo" className="flex">
+          <a href="/home" title="Logo" className="flex">
             <img src={LogoImage} alt="Logo" className="w-auto h-16" />
           </a>
         </div>
@@ -68,7 +68,13 @@ export const NavigationBar: React.FC = (): JSX.Element => {
           {' '}
           {/* Cacher jusqu'à la taille lg */}
           {navList.map((item) => (
-            <a
+            item == 'Boutique' ? <a
+              key={item}
+              href={"/shop"}
+              className="text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-900"
+            >
+              {item}
+            </a> : <a
               key={item}
               href={'#' + item}
               className="text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-900"

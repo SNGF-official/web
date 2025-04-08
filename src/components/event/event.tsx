@@ -13,38 +13,38 @@ import ImageTest from '@/assets/product.png'; // Placeholder image
 
 const events = [
   {
-    title: 'Foire Agricole 2025',
+    title: 'Foire Agricole 2025 - L’innovation au cœur de la terre',
     image: ImageTest,
     date: '15 Avril 2025',
-    description: 'Découvrez les dernières innovations en agriculture.',
+    description: 'Participez à l’événement agricole de l’année ! Drones, serres connectées, et semences bio au rendez-vous.',
     link: '#',
   },
   {
-    title: 'Conférence Écologie',
+    title: 'Conférence Nationale sur l’Écologie Durable',
     image: ImageTest,
     date: '20 Mai 2025',
-    description: 'Les experts discutent des défis environnementaux.',
+    description: 'Rencontrez chercheurs et agriculteurs autour des solutions pour une agriculture respectueuse de l’environnement.',
     link: '#',
   },
   {
-    title: 'Marché Bio Local',
+    title: 'Marché Bio Local – Saveurs & Savoir-faire',
     image: ImageTest,
     date: '5 Juin 2025',
-    description: 'Produits bio et circuits courts en vedette.',
+    description: 'Fruits, légumes, produits transformés : tout droit du producteur au consommateur. Venez goûter local.',
     link: '#',
   },
   {
-    title: 'Atelier Plantation',
+    title: 'Atelier “Plante Ton Avenir”',
     image: ImageTest,
     date: '12 Juillet 2025',
-    description: 'Apprenez à cultiver vos propres plantes.',
+    description: 'Initiez-vous à la plantation avec des spécialistes du reboisement. Repartez avec votre propre plant !',
     link: '#',
   },
   {
-    title: 'Expo Fleurs & Arbres',
+    title: 'Expo Fleurs & Arbres – Festival Vert',
     image: ImageTest,
     date: '25 Août 2025',
-    description: 'Un festival dédié à la nature et au jardinage.',
+    description: 'Une immersion dans un jardin géant. Vente d’arbres rares, concours floral, ateliers DIY verts.',
     link: '#',
   },
 ];
@@ -114,13 +114,11 @@ export function EventCarousel() {
                   </div>
                   <CardContent className="p-6 flex flex-col justify-between h-full">
                     <div>
-                      <h3 className="mt-2 text-xl font-semibold text-gray-800 line-clamp-2">
-                        {event.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-2">{event.date}</p>
-                      <p className="text-gray-700 mt-3 line-clamp-3">
-                        {event.description}
-                      </p>
+                      <h3 className="text-xl font-bold text-[var(--base-green)]">{event.title}</h3>
+                      <p className="mt-2 text-gray-700">{event.description}</p>
+                    </div>
+                    <div className="mt-4 text-sm text-gray-500">
+                      📅 {event.date}
                     </div>
                     <Button
                       className="cursor-pointer mt-4 bg-[var(--base-green)] text-white focus:ring-indigo-500"
