@@ -1,0 +1,29 @@
+name: Generate OpenAPI Client
+
+on:
+  repository_dispatch:
+    types: [generate-client]
+
+jobs:
+  generate-client:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout frontend repository
+        uses: actions/checkout@v2
+
+      - name: Checkout API repository
+        uses: actions/checkout@v2
+        with:
+          repository: SNGF-official/API
+          path: api-spec
+
+      - name: Generate client with OpenAPI Generator
+        run: |
+          openapi-generator-cli generate -i api-spec/openapi.yaml -g typescript-fetch -o ./generated-client
+
+      - name: Commit and push generated client
+        run: |
+          git add generated-client
+          git commit -m "Update generated OpenAPI client"
+          git push
