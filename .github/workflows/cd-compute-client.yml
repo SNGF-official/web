@@ -9,44 +9,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout frontend repository
+      - name: Checkout the WEB repository
         uses: actions/checkout@v2
 
-      - name: Checkout API repository
+      - name: Checkout the API repository
         uses: actions/checkout@v2
         with:
-          repository: SNGF-official/api  # Remplace par l'URL du repo API
+          repository: SNGF-official/api
           path: api-spec
 
-      # Installer OpenAPI Generator CLI via npm
+      # Installer OpenAPI Generator CLI
       - name: Install OpenAPI Generator CLI
         run: |
           npm install @openapitools/openapi-generator-cli -g
 
-      # Vérifier le contenu du répertoire API spec
-      - name: List files in API spec directory
-        run: |
-          ls -l api-spec/docs
-
-      # Générer le client avec OpenAPI Generator
+      # Générer le client OpenAPI dans le repository WEB
       - name: Generate client with OpenAPI Generator
         run: |
           openapi-generator-cli generate -i api-spec/docs/api.yaml -g typescript-fetch -o ./generated-client
 
-      # Configurer Git pour push avec le token
-      - name: Set up Git for push
+      # Configurer Git pour pousser avec un Personal Access Token
+      - name: Set up Git for pushing changes
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/SNGF-official/web.git
+          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/SNGF-official/web.git
 
-      # Vérifier l'URL du remote Git
-      - name: Check remote URL
-        run: |
-          git remote -v  # Vérifie que l'URL est bien configurée
-
-      # Commit et push du client généré
-      - name: Commit and push generated client
+      # Commit et push des fichiers générés
+      - name: Commit and push the generated client
         run: |
           git add generated-client
           git commit -m "Update generated OpenAPI client"
