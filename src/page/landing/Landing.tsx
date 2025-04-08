@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { HeroSection } from '@/components/hero/hero.tsx';
 import { NavigationBar } from '@/components/navbar';
-import { Footer } from '@/components/footer';
+import { FeedbackSection, Footer } from '@/components/footer';
 import { About } from '@/components/about';
 import { EventCarousel } from '@/components/event';
 import { ShopSection } from '@/components/shop/shop.tsx';
@@ -30,6 +30,10 @@ const Landing = (): JSX.Element => {
     {
       id: 'FAQ',
       component: <FAQSection/>,
+    },
+    {
+      id: 'testimony',
+      component: <FeedbackSection />,
     },
     {
       id: 'footer',
