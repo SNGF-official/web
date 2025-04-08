@@ -38,16 +38,19 @@ const ShopSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-center md:text-center w-screen max-w-7xl">
+        <div className="items-center md:text-center w-screen max-w-7xl ml-0">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
             🌿 Notre univers végétal vous accueil aussi 🌿
           </h2>
           <p className="mt-4 text-2xl sm:text-3xl font-semibold text-[var(--base-green)] leading-snug">
             Transformez votre espace avec nos graines, plantes et semences rares
           </p>
-          <p className="mt-4 text-gray-600 text-base sm:text-lg text-center md:text-center leading-relaxed max-w-7xl">
+          <p className="mt-4 text-gray-600 text-base sm:text-lg md:text-center leading-relaxed max-w-7xl">
             Découvrez une sélection exceptionnelle d'espèces botaniques venues des quatre coins du monde.
-            Embellissez votre jardin, purifiez votre intérieur ou lancez votre potager bio en toute sérénité.
+            <br />
+            Embellissez votre jardin, purifiez votre intérieur ou
+            <br />
+            lancez votre potager bio en toute sérénité.
           </p>
           <div className="mt-8 flex flex-wrap gap-4 items-center justify-center">
             <Button
