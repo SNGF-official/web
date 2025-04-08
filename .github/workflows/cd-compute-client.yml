@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: SNGF-official/api  # Remplace par l'URL du repo API
-          path: api-spec  # Le fichier sera téléchargé dans le dossier api-spec
+          path: api-spec
 
       # Installer OpenAPI Generator CLI via npm
       - name: Install OpenAPI Generator CLI
@@ -26,18 +26,23 @@ jobs:
       # Vérifier le contenu du répertoire API spec
       - name: List files in API spec directory
         run: |
-          ls -l api-spec/docs  # Vérifie si api.yaml est bien dans docs/
+          ls -l api-spec/docs
 
       # Générer le client avec OpenAPI Generator
       - name: Generate client with OpenAPI Generator
         run: |
-          openapi-generator-cli generate -i api-spec/docs/api.yaml -g typescript-fetch -o ./generated-client  # Assure-toi du chemin complet
+          openapi-generator-cli generate -i api-spec/docs/api.yaml -g typescript-fetch -o ./generated-client
+
+      # Configurer Git pour pousser les changements avec le token d'authentification
+      - name: Set up Git for push
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/SNGF-official/web.git
 
       # Commit et push du client généré
       - name: Commit and push generated client
         run: |
-          git config --global user.email rabenaly3@gmail.com
-          git config --global user.name YlanDecode
           git add generated-client
           git commit -m "Update generated OpenAPI client"
           git push
