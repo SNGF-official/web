@@ -36,8 +36,8 @@ jobs:
       # Configurer Git pour push avec le token
       - name: Set up Git for push
         run: |
-          git config --global user.email "rabenaly3@gmail.com"
-          git config --global user.name "YlanDecode"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/SNGF-official/web.git
 
       # Vérifier l'URL du remote Git
