@@ -15,18 +15,23 @@ jobs:
       - name: Checkout API repository
         uses: actions/checkout@v2
         with:
-          repository: SNGF-official/API  # Remplace par l'URL de ton repo API
-          path: api-spec
+          repository: SNGF-official/api  # Remplace par l'URL du repo API
+          path: api-spec  # Le fichier sera téléchargé dans le dossier api-spec
 
-      # Installer OpenAPI Generator via npm
+      # Installer OpenAPI Generator CLI via npm
       - name: Install OpenAPI Generator CLI
         run: |
           npm install @openapitools/openapi-generator-cli -g
 
+      # Vérifier le contenu du répertoire API spec
+      - name: List files in API spec directory
+        run: |
+          ls -l api-spec/docs  # Vérifie si api.yaml est bien dans docs/
+
       # Générer le client avec OpenAPI Generator
       - name: Generate client with OpenAPI Generator
         run: |
-          openapi-generator-cli generate -i docs/api.yaml -g typescript-fetch -o ./generated-client
+          openapi-generator-cli generate -i api-spec/docs/api.yaml -g typescript-fetch -o ./generated-client  # Assure-toi du chemin complet
 
       # Commit et push du client généré
       - name: Commit and push generated client
