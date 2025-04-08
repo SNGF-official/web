@@ -36,6 +36,8 @@ jobs:
       # Commit et push du client généré
       - name: Commit and push generated client
         run: |
+          git config --global user.email rabenaly3@gmail.com
+          git config --global user.name YlanDecode
           git add generated-client
           git commit -m "Update generated OpenAPI client"
           git push
