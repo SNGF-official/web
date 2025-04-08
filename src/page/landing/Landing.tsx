@@ -7,6 +7,7 @@ import { EventCarousel } from '@/components/event';
 import { ShopSection } from '@/components/shop/shop.tsx';
 import { ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { FAQSection } from '@/components/faq';
 
 const Landing = (): JSX.Element => {
   const sections = [
@@ -25,6 +26,10 @@ const Landing = (): JSX.Element => {
     {
       id: 'Boutique',
       component: <ShopSection />,
+    },
+    {
+      id: 'FAQ',
+      component: <FAQSection/>,
     },
     {
       id: 'footer',
