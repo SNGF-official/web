@@ -21,10 +21,10 @@ import { mapValues } from '../runtime';
 export interface Blog {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Blog
      */
-    readonly id: number;
+    id: string;
     /**
      * 
      * @type {string}
@@ -102,13 +102,14 @@ export function BlogToJSON(json: any): Blog {
     return BlogToJSONTyped(json, false);
 }
 
-export function BlogToJSONTyped(value?: Omit<Blog, 'id'> | null, ignoreDiscriminator: boolean = false): any {
+export function BlogToJSONTyped(value?: Blog | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
+        'id': value['id'],
         'title': value['title'],
         'content': value['content'],
         'author': value['author'],

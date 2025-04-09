@@ -21,10 +21,10 @@ import { mapValues } from '../runtime';
 export interface Event {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Event
      */
-    readonly id: number;
+    id: string;
     /**
      * 
      * @type {string}
@@ -109,13 +109,14 @@ export function EventToJSON(json: any): Event {
     return EventToJSONTyped(json, false);
 }
 
-export function EventToJSONTyped(value?: Omit<Event, 'id'> | null, ignoreDiscriminator: boolean = false): any {
+export function EventToJSONTyped(value?: Event | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
+        'id': value['id'],
         'title': value['title'],
         'description': value['description'],
         'date': ((value['date']).toISOString().substring(0,10)),

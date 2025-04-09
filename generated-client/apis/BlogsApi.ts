@@ -24,7 +24,7 @@ import {
 
 export interface CrupdateBlogRequest {
     id: number;
-    blog: Omit<Blog, 'id'>;
+    blog: Blog;
 }
 
 export interface GetBlogByIDRequest {

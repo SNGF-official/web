@@ -23,7 +23,7 @@ import {
 } from '../models/index';
 
 export interface CrupdateOrderRequest {
-    order: Omit<Order, 'id'>;
+    order: Order;
 }
 
 /**

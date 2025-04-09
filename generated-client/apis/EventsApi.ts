@@ -24,7 +24,7 @@ import {
 
 export interface CrupdateEventRequest {
     id: number;
-    event: Omit<Event, 'id'>;
+    event: Event;
 }
 
 export interface GetEventByIDRequest {

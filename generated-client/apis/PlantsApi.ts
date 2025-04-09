@@ -24,12 +24,15 @@ import {
 
 export interface CrupdatePlantRequest {
     id: number;
-    plant: Omit<Plant, 'id'>;
+    plant: Plant;
 }
 
 export interface GetListPlantRequest {
     name?: string;
     type?: string;
+    category?: GetListPlantCategoryEnum;
+    size?: GetListPlantSizeEnum;
+    unit?: string;
     status?: GetListPlantStatusEnum;
     operatorId?: number;
 }
@@ -44,8 +47,8 @@ export interface GetPlantByIDRequest {
 export class PlantsApi extends runtime.BaseAPI {
 
     /**
-     * Update an existing plant\'s information.
-     * Update a plant
+     * Update an existing plant or seed\'s information.
+     * Update a plant or seed
      */
     async crupdatePlantRaw(requestParameters: CrupdatePlantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -80,8 +83,8 @@ export class PlantsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Update an existing plant\'s information.
-     * Update a plant
+     * Update an existing plant or seed\'s information.
+     * Update a plant or seed
      */
     async crupdatePlant(requestParameters: CrupdatePlantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.crupdatePlantRaw(requestParameters, initOverrides);
@@ -89,7 +92,7 @@ export class PlantsApi extends runtime.BaseAPI {
 
     /**
      * Retrieve a filtered list of active plants and seeds.
-     * Get list of plants
+     * Get list of plants and seeds
      */
     async getListPlantRaw(requestParameters: GetListPlantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Plant>>> {
         const queryParameters: any = {};
@@ -100,6 +103,18 @@ export class PlantsApi extends runtime.BaseAPI {
 
         if (requestParameters['type'] != null) {
             queryParameters['type'] = requestParameters['type'];
+        }
+
+        if (requestParameters['category'] != null) {
+            queryParameters['category'] = requestParameters['category'];
+        }
+
+        if (requestParameters['size'] != null) {
+            queryParameters['size'] = requestParameters['size'];
+        }
+
+        if (requestParameters['unit'] != null) {
+            queryParameters['unit'] = requestParameters['unit'];
         }
 
         if (requestParameters['status'] != null) {
@@ -124,7 +139,7 @@ export class PlantsApi extends runtime.BaseAPI {
 
     /**
      * Retrieve a filtered list of active plants and seeds.
-     * Get list of plants
+     * Get list of plants and seeds
      */
     async getListPlant(requestParameters: GetListPlantRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Plant>> {
         const response = await this.getListPlantRaw(requestParameters, initOverrides);
@@ -132,8 +147,8 @@ export class PlantsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieve a single plant by its ID.
-     * Get plant by ID
+     * Retrieve a single plant or seed by its ID.
+     * Get plant or seed by ID
      */
     async getPlantByIDRaw(requestParameters: GetPlantByIDRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Plant>> {
         if (requestParameters['id'] == null) {
@@ -158,8 +173,8 @@ export class PlantsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieve a single plant by its ID.
-     * Get plant by ID
+     * Retrieve a single plant or seed by its ID.
+     * Get plant or seed by ID
      */
     async getPlantByID(requestParameters: GetPlantByIDRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Plant> {
         const response = await this.getPlantByIDRaw(requestParameters, initOverrides);
@@ -168,6 +183,25 @@ export class PlantsApi extends runtime.BaseAPI {
 
 }
 
+/**
+ * @export
+ */
+export const GetListPlantCategoryEnum = {
+    Seed: 'SEED',
+    Plant: 'PLANT'
+} as const;
+export type GetListPlantCategoryEnum = typeof GetListPlantCategoryEnum[keyof typeof GetListPlantCategoryEnum];
+/**
+ * @export
+ */
+export const GetListPlantSizeEnum = {
+    Xs: 'XS',
+    S: 'S',
+    M: 'M',
+    L: 'L',
+    Xl: 'XL'
+} as const;
+export type GetListPlantSizeEnum = typeof GetListPlantSizeEnum[keyof typeof GetListPlantSizeEnum];
 /**
  * @export
  */

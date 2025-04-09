@@ -29,10 +29,10 @@ import {
 export interface Order {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Order
      */
-    readonly id: number;
+    id: string;
     /**
      * 
      * @type {Array<OrderItemsInner>}
@@ -102,13 +102,14 @@ export function OrderToJSON(json: any): Order {
     return OrderToJSONTyped(json, false);
 }
 
-export function OrderToJSONTyped(value?: Omit<Order, 'id'> | null, ignoreDiscriminator: boolean = false): any {
+export function OrderToJSONTyped(value?: Order | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
+        'id': value['id'],
         'items': ((value['items'] as Array<any>).map(OrderItemsInnerToJSON)),
         'customer_email': value['customerEmail'],
         'submitted_at': value['submittedAt'] == null ? undefined : ((value['submittedAt']).toISOString()),

@@ -1,16 +1,14 @@
-.openapi-generator-ignore
 apis/BlogsApi.ts
 apis/EventsApi.ts
 apis/OrdersApi.ts
 apis/PlantsApi.ts
-apis/TestimonialsApi.ts
 apis/index.ts
 index.ts
 models/Blog.ts
+models/Contact.ts
 models/Event.ts
 models/Order.ts
 models/OrderItemsInner.ts
 models/Plant.ts
-models/Testimonial.ts
 models/index.ts
 runtime.ts

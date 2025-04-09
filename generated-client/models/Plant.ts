@@ -21,10 +21,10 @@ import { mapValues } from '../runtime';
 export interface Plant {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Plant
      */
-    readonly id: number;
+    id: string;
     /**
      * 
      * @type {string}
@@ -36,7 +36,13 @@ export interface Plant {
      * @type {string}
      * @memberof Plant
      */
-    type: string;
+    category: PlantCategoryEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Plant
+     */
+    type?: string;
     /**
      * 
      * @type {string}
@@ -50,11 +56,29 @@ export interface Plant {
      */
     price: number;
     /**
-     * 
+     * Prix par unité (g pour graines, unité pour plantes)
+     * @type {number}
+     * @memberof Plant
+     */
+    pricePerUnit?: number;
+    /**
+     * Unité de vente (g, sachet, etc.)
+     * @type {string}
+     * @memberof Plant
+     */
+    unit?: string;
+    /**
+     * Quantité disponible (en grammes pour graines ou unités pour plantes)
      * @type {number}
      * @memberof Plant
      */
     quantity: number;
+    /**
+     * Taille de la plante (si catégorie = PLANT)
+     * @type {string}
+     * @memberof Plant
+     */
+    size?: PlantSizeEnum;
     /**
      * 
      * @type {string}
@@ -73,6 +97,27 @@ export interface Plant {
 /**
  * @export
  */
+export const PlantCategoryEnum = {
+    Seed: 'SEED',
+    Plant: 'PLANT'
+} as const;
+export type PlantCategoryEnum = typeof PlantCategoryEnum[keyof typeof PlantCategoryEnum];
+
+/**
+ * @export
+ */
+export const PlantSizeEnum = {
+    Xs: 'XS',
+    S: 'S',
+    M: 'M',
+    L: 'L',
+    Xl: 'XL'
+} as const;
+export type PlantSizeEnum = typeof PlantSizeEnum[keyof typeof PlantSizeEnum];
+
+/**
+ * @export
+ */
 export const PlantStatusEnum = {
     Active: 'ACTIVE',
     Inactive: 'INACTIVE'
@@ -86,7 +131,7 @@ export type PlantStatusEnum = typeof PlantStatusEnum[keyof typeof PlantStatusEnu
 export function instanceOfPlant(value: object): value is Plant {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('category' in value) || value['category'] === undefined) return false;
     if (!('price' in value) || value['price'] === undefined) return false;
     if (!('quantity' in value) || value['quantity'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
@@ -105,10 +150,14 @@ export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pla
         
         'id': json['id'],
         'name': json['name'],
-        'type': json['type'],
+        'category': json['category'],
+        'type': json['type'] == null ? undefined : json['type'],
         'description': json['description'] == null ? undefined : json['description'],
         'price': json['price'],
+        'pricePerUnit': json['price_per_unit'] == null ? undefined : json['price_per_unit'],
+        'unit': json['unit'] == null ? undefined : json['unit'],
         'quantity': json['quantity'],
+        'size': json['size'] == null ? undefined : json['size'],
         'status': json['status'],
         'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
     };
@@ -118,18 +167,23 @@ export function PlantToJSON(json: any): Plant {
     return PlantToJSONTyped(json, false);
 }
 
-export function PlantToJSONTyped(value?: Omit<Plant, 'id'> | null, ignoreDiscriminator: boolean = false): any {
+export function PlantToJSONTyped(value?: Plant | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
+        'id': value['id'],
         'name': value['name'],
+        'category': value['category'],
         'type': value['type'],
         'description': value['description'],
         'price': value['price'],
+        'price_per_unit': value['pricePerUnit'],
+        'unit': value['unit'],
         'quantity': value['quantity'],
+        'size': value['size'],
         'status': value['status'],
         'image_url': value['imageUrl'],
     };
