@@ -71,13 +71,13 @@ export const NavigationBar: React.FC = (): JSX.Element => {
             item == 'Boutique' ? <a
               key={item}
               href={"/shop"}
-              className="text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-900"
+              className="text-2xl text-gray-600 transition-all duration-200 hover:text-gray-900"
             >
               {item}
             </a> : <a
               key={item}
               href={'#' + item}
-              className="text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-900"
+              className="text-2xl text-gray-600 transition-all duration-200 hover:text-gray-900"
             >
               {item}
             </a>
