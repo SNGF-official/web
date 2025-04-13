@@ -3,7 +3,7 @@ import SVGWaveTop from '@/assets/svg/top.svg';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative w-full flex items-center justify-center min-h-screen sm:pb-16 lg:pb-20 xl:pb-40 bg-[var(--bg-green)] overflow-hidden">
+    <section className="relative w-full flex items-center justify-center min-h-[20vh] sm:pb-16 lg:pb-20 xl:pb-40 bg-[var(--bg-green)] overflow-hidden">
       {/* Vague en bas */}
       <img
         src={SVGWaveTop}
