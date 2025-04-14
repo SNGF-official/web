@@ -1,4 +1,4 @@
-/* tslint:disable */
+
 /* eslint-disable */
 /**
  * SNGF API
@@ -13,7 +13,7 @@
  */
 
 
-export const BASE_PATH = "http://localhost".replace(/\/+$/, "");
+export const BASE_PATH = process.env.BASE_URL;
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
