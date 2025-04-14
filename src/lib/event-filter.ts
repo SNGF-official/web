@@ -38,7 +38,7 @@ export function getFilteredEvents(
     };
 
     const [day, monthName, year] = dateStr.split(' ');
-    const month = months[monthName.toLowerCase()] ?? 0;
+    const month = monthName ? months[monthName.toLowerCase()] ?? 0 : 0;
     return new Date(parseInt(year), month, parseInt(day));
   };
 
