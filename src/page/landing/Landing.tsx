@@ -45,13 +45,20 @@ const Landing = (): JSX.Element => {
       component: <Footer />,
     },
   ];
+  const navList = [
+    { name: 'A propos', href: '#A propos' },
+    { name: 'Evenement', href: '#Evenement' },
+    { name: 'Boutique', href: '/shop' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'FAQ', href: '#FAQ' },
+  ];
 
   return (
     <div className="relative bg-[var(--bg-color)] h-screen overflow-x-hidden flex flex-col scroll-smooth">
-      <NavigationBar />
+      <NavigationBar elements={navList}/>
       <div className="flex flex-col flex-grow">
         {sections.map((section) => (
-          <div key={section.id} id={section.id} className="w-full">
+          <div key={section.id} id={section.id} className="w-full h-full">
             {section.component}
           </div>
         ))}

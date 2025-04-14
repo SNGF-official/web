@@ -4,8 +4,36 @@ import { ProductCard, ProductDetail } from '@/components/product';
 import { XIcon } from 'lucide-react';
 import { Availability, Filters, SortBy } from '@/components';
 import { getFilteredProducts } from '@/lib/filter-util.ts';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { NavigationBar } from '@/components/navbar';
+import { useRef } from 'react';
+import { useInView, motion } from 'framer-motion';
+
+const AnimatedProductCard = ({
+                               product,
+                               onClick,
+                             }: {
+  product: Product;
+  onClick: () => void;
+  index: number;
+}) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, margin: "-10% 0px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      transition={{
+        duration: 0.5,
+        ease: "easeOut",
+      }}
+    >
+      <ProductCard product={product} onClick={onClick} />
+    </motion.div>
+  );
+};
 
 const ShopPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
@@ -35,10 +63,14 @@ const ShopPage = () => {
     filterAvailability,
     sortBy
   );
-
+  const navList = [
+    { name: 'A propos', href: '/home#A propos' },
+    { name: 'Evenement', href: '/home#Evenement' },
+    { name: 'FAQ', href: '/home#FAQ' },
+  ];
   return (
     <>
-      <NavigationBar />
+      <NavigationBar elements={navList}/>
     <div className="relative min-h-screen bg-white flex">
       {/* Sidebar desktop */}
       <div className="hidden md:flex flex-col w-1/6 p-4">
@@ -66,15 +98,16 @@ const ShopPage = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onClick={() => {
-                handleProductClick(product);
-              }}
-            />
-          ))}
+          {filteredProducts.map((product, index) => (
+              <AnimatedProductCard
+                key={product.id}
+                product={product}
+                index={index}
+                onClick={() => {
+                  handleProductClick(product);
+                }}
+              />
+            ))}
         </div>
       </div>
 
