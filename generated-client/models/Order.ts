@@ -35,16 +35,28 @@ export interface Order {
     id: string;
     /**
      * 
-     * @type {Array<OrderItemsInner>}
+     * @type {string}
      * @memberof Order
      */
-    items: Array<OrderItemsInner>;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof Order
      */
     customerEmail?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Order
+     */
+    number?: string;
+    /**
+     * 
+     * @type {Array<OrderItemsInner>}
+     * @memberof Order
+     */
+    items: Array<OrderItemsInner>;
     /**
      * 
      * @type {Date}
@@ -91,8 +103,10 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
     return {
         
         'id': json['id'],
-        'items': ((json['items'] as Array<any>).map(OrderItemsInnerFromJSON)),
+        'name': json['name'] == null ? undefined : json['name'],
         'customerEmail': json['customer_email'] == null ? undefined : json['customer_email'],
+        'number': json['number'] == null ? undefined : json['number'],
+        'items': ((json['items'] as Array<any>).map(OrderItemsInnerFromJSON)),
         'submittedAt': json['submitted_at'] == null ? undefined : (new Date(json['submitted_at'])),
         'status': json['status'] == null ? undefined : json['status'],
     };
@@ -110,8 +124,10 @@ export function OrderToJSONTyped(value?: Order | null, ignoreDiscriminator: bool
     return {
         
         'id': value['id'],
-        'items': ((value['items'] as Array<any>).map(OrderItemsInnerToJSON)),
+        'name': value['name'],
         'customer_email': value['customerEmail'],
+        'number': value['number'],
+        'items': ((value['items'] as Array<any>).map(OrderItemsInnerToJSON)),
         'submitted_at': value['submittedAt'] == null ? undefined : ((value['submittedAt']).toISOString()),
         'status': value['status'],
     };

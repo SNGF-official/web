@@ -56,29 +56,29 @@ export interface Plant {
      */
     price: number;
     /**
-     * Prix par unité (g pour graines, unité pour plantes)
+     * 
      * @type {number}
      * @memberof Plant
      */
-    pricePerUnit?: number;
+    pricePerUnit?: number | null;
     /**
-     * Unité de vente (g, sachet, etc.)
+     * 
      * @type {string}
      * @memberof Plant
      */
     unit?: string;
     /**
-     * Quantité disponible (en grammes pour graines ou unités pour plantes)
+     * 
      * @type {number}
      * @memberof Plant
      */
     quantity: number;
     /**
-     * Taille de la plante (si catégorie = PLANT)
+     * 
      * @type {string}
      * @memberof Plant
      */
-    size?: PlantSizeEnum;
+    size: PlantSizeEnum;
     /**
      * 
      * @type {string}
@@ -86,11 +86,11 @@ export interface Plant {
      */
     status: PlantStatusEnum;
     /**
-     * 
-     * @type {string}
+     * Liste des URLs des images associées
+     * @type {Array<string>}
      * @memberof Plant
      */
-    imageUrl?: string;
+    imageUrls?: Array<string>;
 }
 
 
@@ -134,6 +134,7 @@ export function instanceOfPlant(value: object): value is Plant {
     if (!('category' in value) || value['category'] === undefined) return false;
     if (!('price' in value) || value['price'] === undefined) return false;
     if (!('quantity' in value) || value['quantity'] === undefined) return false;
+    if (!('size' in value) || value['size'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
     return true;
 }
@@ -157,9 +158,9 @@ export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pla
         'pricePerUnit': json['price_per_unit'] == null ? undefined : json['price_per_unit'],
         'unit': json['unit'] == null ? undefined : json['unit'],
         'quantity': json['quantity'],
-        'size': json['size'] == null ? undefined : json['size'],
+        'size': json['size'],
         'status': json['status'],
-        'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
+        'imageUrls': json['image_urls'] == null ? undefined : json['image_urls'],
     };
 }
 
@@ -185,7 +186,7 @@ export function PlantToJSONTyped(value?: Plant | null, ignoreDiscriminator: bool
         'quantity': value['quantity'],
         'size': value['size'],
         'status': value['status'],
-        'image_url': value['imageUrl'],
+        'image_urls': value['imageUrls'],
     };
 }
 

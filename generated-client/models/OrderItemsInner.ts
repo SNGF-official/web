@@ -21,10 +21,10 @@ import { mapValues } from '../runtime';
 export interface OrderItemsInner {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof OrderItemsInner
      */
-    plantId: number;
+    plantId: string;
     /**
      * 
      * @type {number}

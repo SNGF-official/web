@@ -36,6 +36,12 @@ export interface Blog {
      * @type {string}
      * @memberof Blog
      */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Blog
+     */
     content: string;
     /**
      * 
@@ -48,7 +54,19 @@ export interface Blog {
      * @type {Date}
      * @memberof Blog
      */
-    publishedAt?: Date;
+    publishedAt?: Date | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Blog
+     */
+    imageUrl?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Blog
+     */
+    fileId?: string | null;
     /**
      * 
      * @type {string}
@@ -91,9 +109,12 @@ export function BlogFromJSONTyped(json: any, ignoreDiscriminator: boolean): Blog
         
         'id': json['id'],
         'title': json['title'],
+        'description': json['description'] == null ? undefined : json['description'],
         'content': json['content'],
         'author': json['author'] == null ? undefined : json['author'],
         'publishedAt': json['published_at'] == null ? undefined : (new Date(json['published_at'])),
+        'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
+        'fileId': json['file_id'] == null ? undefined : json['file_id'],
         'status': json['status'],
     };
 }
@@ -111,9 +132,12 @@ export function BlogToJSONTyped(value?: Blog | null, ignoreDiscriminator: boolea
         
         'id': value['id'],
         'title': value['title'],
+        'description': value['description'],
         'content': value['content'],
         'author': value['author'],
-        'published_at': value['publishedAt'] == null ? undefined : ((value['publishedAt']).toISOString()),
+        'published_at': value['publishedAt'] == null ? undefined : ((value['publishedAt'] as any).toISOString()),
+        'image_url': value['imageUrl'],
+        'file_id': value['fileId'],
         'status': value['status'],
     };
 }

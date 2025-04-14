@@ -35,6 +35,8 @@ export interface GetListPlantRequest {
     unit?: string;
     status?: GetListPlantStatusEnum;
     operatorId?: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface GetPlantByIDRequest {
@@ -123,6 +125,14 @@ export class PlantsApi extends runtime.BaseAPI {
 
         if (requestParameters['operatorId'] != null) {
             queryParameters['operator_id'] = requestParameters['operatorId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

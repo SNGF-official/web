@@ -42,6 +42,12 @@ export interface Contact {
      * @type {string}
      * @memberof Contact
      */
+    number?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Contact
+     */
     message?: string;
 }
 
@@ -66,6 +72,7 @@ export function ContactFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'customerEmail': json['customer_email'] == null ? undefined : json['customer_email'],
+        'number': json['number'] == null ? undefined : json['number'],
         'message': json['message'] == null ? undefined : json['message'],
     };
 }
@@ -84,6 +91,7 @@ export function ContactToJSONTyped(value?: Contact | null, ignoreDiscriminator: 
         'id': value['id'],
         'name': value['name'],
         'customer_email': value['customerEmail'],
+        'number': value['number'],
         'message': value['message'],
     };
 }

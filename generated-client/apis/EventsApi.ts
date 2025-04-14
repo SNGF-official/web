@@ -36,6 +36,8 @@ export interface GetListEventRequest {
     date?: Date;
     status?: GetListEventStatusEnum;
     operatorId?: number;
+    page?: number;
+    pageSize?: number;
 }
 
 /**
@@ -143,6 +145,14 @@ export class EventsApi extends runtime.BaseAPI {
 
         if (requestParameters['operatorId'] != null) {
             queryParameters['operator_id'] = requestParameters['operatorId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

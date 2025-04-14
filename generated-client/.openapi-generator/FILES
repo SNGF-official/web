@@ -1,5 +1,6 @@
 apis/BlogsApi.ts
 apis/EventsApi.ts
+apis/FileApi.ts
 apis/OrdersApi.ts
 apis/PlantsApi.ts
 apis/index.ts
@@ -7,8 +8,10 @@ index.ts
 models/Blog.ts
 models/Contact.ts
 models/Event.ts
+models/FileInfo.ts
 models/Order.ts
 models/OrderItemsInner.ts
 models/Plant.ts
+models/UploadFile.ts
 models/index.ts
 runtime.ts

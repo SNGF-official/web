@@ -35,6 +35,8 @@ export interface GetListBlogRequest {
     keyword?: string;
     status?: GetListBlogStatusEnum;
     operatorId?: number;
+    page?: number;
+    pageSize?: number;
 }
 
 /**
@@ -138,6 +140,14 @@ export class BlogsApi extends runtime.BaseAPI {
 
         if (requestParameters['operatorId'] != null) {
             queryParameters['operator_id'] = requestParameters['operatorId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

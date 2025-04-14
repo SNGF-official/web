@@ -54,7 +54,7 @@ export interface Event {
      * @type {string}
      * @memberof Event
      */
-    imageUrl?: string;
+    imageUrl?: string | null;
     /**
      * 
      * @type {string}
@@ -119,7 +119,7 @@ export function EventToJSONTyped(value?: Event | null, ignoreDiscriminator: bool
         'id': value['id'],
         'title': value['title'],
         'description': value['description'],
-        'date': ((value['date']).toISOString().substring(0,10)),
+        'date': ((value['date']).toISOString()),
         'location': value['location'],
         'image_url': value['imageUrl'],
         'status': value['status'],

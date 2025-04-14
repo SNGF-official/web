@@ -26,6 +26,11 @@ export interface CrupdateOrderRequest {
     order: Order;
 }
 
+export interface GetListOrderRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 /**
  * 
  */
@@ -72,8 +77,16 @@ export class OrdersApi extends runtime.BaseAPI {
      * Retrieve all submitted orders.
      * Get all orders
      */
-    async getListOrderRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Order>>> {
+    async getListOrderRaw(requestParameters: GetListOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Order>>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -91,8 +104,8 @@ export class OrdersApi extends runtime.BaseAPI {
      * Retrieve all submitted orders.
      * Get all orders
      */
-    async getListOrder(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Order>> {
-        const response = await this.getListOrderRaw(initOverrides);
+    async getListOrder(requestParameters: GetListOrderRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Order>> {
+        const response = await this.getListOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
