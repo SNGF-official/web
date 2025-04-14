@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import ImageTest from '@/assets/product.png';
+import { motion, useInView } from "framer-motion";
 
 interface Plant {
   id: number;
@@ -24,6 +25,42 @@ const plants: Plant[] = [
   { id: 4, name: "Persil Géant", image: ImageTest },
   { id: 5, name: "Tomate Cerise", image: ImageTest },
 ];
+
+const AnimatedCard: React.FC<{ event: Plant; index: number }> = ({ event, index }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, margin: "-10% 0px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      transition={{
+        duration: 0.5,
+        ease: "easeOut",
+        delay: index * 0.1,
+      }}
+    >
+      <Card className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+        <div className="relative h-56 sm:h-64 overflow-hidden">
+          <img
+            src={event.image}
+            alt={event.name}
+            className="w-full h-full object-cover scale-100 hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+        <CardContent className="p-6 flex flex-col items-center gap-2">
+          <h4 className="text-lg font-semibold text-center text-[var(--base-green)]">{event.name}</h4>
+          <a href="/shop" className="w-full">
+            <Button className="cursor-pointer w-full bg-[var(--base-green)] hover:bg-green-800 transition text-white rounded-full">
+              Voir boutique
+            </Button>
+          </a>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+};
 
 export const PlantCarousel: React.FC = () => {
   const [, setCurrentIndex] = useState(0);
@@ -73,7 +110,10 @@ export const PlantCarousel: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative bg-[var(--bg-color)] min-h-[20vh] overflow-x-hidden flex flex-col scroll-smooth">
+    <div className="relative bg-[var(--bg-color)] min-h-[70vh] h-[70vh] overflow-x-hidden flex flex-col scroll-smooth">
+      <h1 className="text-4xl font-bold text-[var(--text-beige)] text-center mb-6 mt-10">
+        Nos produits les plus recherchés
+      </h1>
       <Carousel
         setApi={handleSetApi}
         opts={{
@@ -91,29 +131,7 @@ export const PlantCarousel: React.FC = () => {
               key={index}
               className="basis-full md:basis-1/2 lg:basis-1/3 px-4 md:px-6"
             >
-              <Card
-                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl hover:shadow-green-950 transform hover:-translate-y-2 transition-transform duration-300"
-              >
-                <h3 className="text-xl font-bold text-center text-yellow-300">Nos produits les plus recherchés</h3>
-                <h3 className="text-xl font-light text-center text-[var(--base-green)]">{event.name}</h3>
-                <div className="relative h-60 sm:h-72">
-                  <img
-                    src={event.image}
-                    alt={event.name}
-                    className="rounded-t-lg w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-6 flex flex-col justify-between h-full">
-                  <div>
-                    <p className="mt-2 text-gray-700">{event.name}</p>
-                  </div>
-                  <a href="/shop" className="cursor-pointer mt-4 bg-[var(--base-green)] text-white focus:ring-indigo-500 text-center rounded-2xl">
-                    <Button className="cursor-pointer">
-                      Voir boutique
-                    </Button>
-                  </a>
-              </CardContent>
-            </Card>
+              <AnimatedCard event={event} index={index} />
             </CarouselItem>
           ))}
         </CarouselContent>
