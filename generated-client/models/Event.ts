@@ -1,4 +1,3 @@
-/* tslint:disable */
 /* eslint-disable */
 /**
  * SNGF API
@@ -12,7 +11,6 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -55,12 +53,6 @@ export interface Event {
      * @memberof Event
      */
     imageUrl?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    status: EventStatusEnum;
 }
 
 
@@ -89,7 +81,7 @@ export function EventFromJSON(json: any): Event {
     return EventFromJSONTyped(json, false);
 }
 
-export function EventFromJSONTyped(json: any, ignoreDiscriminator: boolean): Event {
+export function EventFromJSONTyped(json: any, _ignoreDiscriminator: boolean): Event {
     if (json == null) {
         return json;
     }
@@ -101,7 +93,6 @@ export function EventFromJSONTyped(json: any, ignoreDiscriminator: boolean): Eve
         'date': (new Date(json['date'])),
         'location': json['location'] == null ? undefined : json['location'],
         'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
-        'status': json['status'],
     };
 }
 
@@ -109,7 +100,7 @@ export function EventToJSON(json: any): Event {
     return EventToJSONTyped(json, false);
 }
 
-export function EventToJSONTyped(value?: Event | null, ignoreDiscriminator: boolean = false): any {
+export function EventToJSONTyped(value?: Event | null, _ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -122,7 +113,6 @@ export function EventToJSONTyped(value?: Event | null, ignoreDiscriminator: bool
         'date': ((value['date']).toISOString()),
         'location': value['location'],
         'image_url': value['imageUrl'],
-        'status': value['status'],
     };
 }
 

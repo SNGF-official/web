@@ -1,5 +1,6 @@
-import { EventSortBy, getFilteredEvents } from '@/lib';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { EventSortBy, getFilteredEvents, type Event } from '@/lib';
+import { Event as ApiEvent } from 'generated-client/models/Event';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
@@ -10,46 +11,18 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button.tsx';
-import ImageTest from '@/assets/product.png';
-import { EventFilters } from '@/components/eventFilter.tsx'; // Placeholder image
+import { EventFilters } from '@/components/eventFilter.tsx';
+import { useEvent } from '@/hooks/useEvent';
 
-const events = [
-  {
-    title: 'Foire Agricole 2025 - L’innovation au cœur de la terre',
-    image: ImageTest,
-    date: '15 Avril 2025',
-    description: 'Participez à l’événement agricole de l’année ! Drones, serres connectées, et semences bio au rendez-vous.',
-    link: '#',
-  },
-  {
-    title: 'Conférence Nationale sur l’Écologie Durable',
-    image: ImageTest,
-    date: '20 Mai 2025',
-    description: 'Rencontrez chercheurs et agriculteurs autour des solutions pour une agriculture respectueuse de l’environnement.',
-    link: '#',
-  },
-  {
-    title: 'Marché Bio Local – Saveurs & Savoir-faire',
-    image: ImageTest,
-    date: '5 Juin 2025',
-    description: 'Fruits, légumes, produits transformés : tout droit du producteur au consommateur. Venez goûter local.',
-    link: '#',
-  },
-  {
-    title: 'Atelier “Plante Ton Avenir”',
-    image: ImageTest,
-    date: '12 Juillet 2025',
-    description: 'Initiez-vous à la plantation avec des spécialistes du reboisement. Repartez avec votre propre plant !',
-    link: '#',
-  },
-  {
-    title: 'Expo Fleurs & Arbres – Festival Vert',
-    image: ImageTest,
-    date: '25 Août 2025',
-    description: 'Une immersion dans un jardin géant. Vente d’arbres rares, concours floral, ateliers DIY verts.',
-    link: '#',
-  },
-];
+const transformApiEventToUIEvent = (ev: ApiEvent): Event => {
+  return {
+    title: ev.title,
+    description: ev.description ?? '',
+    image: ev.imageUrl ?? '',
+    date: new Date(ev.date).toLocaleDateString(),
+    link: `/events/${ev.id}`,
+  };
+};
 
 export function EventCarousel() {
   const [search, setSearch] = useState('');
@@ -57,6 +30,19 @@ export function EventCarousel() {
   const [, setCurrentIndex] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const carouselRef = useRef<CarouselApi | null>(null);
+
+  const { events, loading, error } = useEvent({
+    title: search,
+    sort_by: sortBy,
+  });
+
+  const uiEvents: Event[] = useMemo(() => {
+    return events.map((ev: ApiEvent) => transformApiEventToUIEvent(ev));
+  }, [events]);
+
+  const displayedEvents = useMemo(() => {
+    return getFilteredEvents(uiEvents, search, sortBy);
+  }, [uiEvents, search, sortBy]);
 
   const handleSetApi = useCallback((api: CarouselApi) => {
     carouselRef.current = api;
@@ -72,7 +58,7 @@ export function EventCarousel() {
     return () => {
       clearInterval(interval);
     };
-  }, [isUserInteracting, carouselRef]);
+  }, [isUserInteracting]);
 
   const handleSelect = useCallback((api?: CarouselApi) => {
     if (!api) return;
@@ -97,65 +83,77 @@ export function EventCarousel() {
           sortBy={sortBy}
           setSortBy={setSortBy}
         />
-        <Carousel
-          setApi={handleSetApi}
-          opts={{
-            align: 'center',
-            loop: true,
-          }}
-          className="relative w-full"
-          onSelect={() =>
-            carouselRef.current && handleSelect(carouselRef.current)
-          }
-        >
-          <CarouselContent className="-ml-4 md:-ml-6">
-            {getFilteredEvents(events, search, sortBy).map((event, index) => (
-              <CarouselItem
-                key={index}
-                className="basis-full md:basis-1/2 lg:basis-1/3 px-4 md:px-6"
-              >
-                <Card className="bg-white rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-green-950 transition-shadow duration-300">
-                  <div className="relative h-60 sm:h-72">
-                    <img
-                      src={event.image}
-                      alt={event.title}
-                      className="rounded-t-lg w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardContent className="p-6 flex flex-col justify-between h-full">
-                    <div>
-                      <h3 className="text-xl font-bold text-[var(--base-green)]">{event.title}</h3>
-                      <p className="mt-2 text-gray-700">{event.description}</p>
-                    </div>
-                    <div className="mt-4 text-sm text-gray-500">
-                      📅 {event.date}
-                    </div>
-                    <Button
-                      className="cursor-pointer mt-4 bg-[var(--base-green)] text-white focus:ring-indigo-500"
-                      onClick={() => (window.location.href = event.link)}
-                    >
-                      En savoir plus
-                    </Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="absolute inset-y-0 left-0 flex items-center">
-            <CarouselPrevious
-              className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -ml-6 md:-ml-8"
-              size="icon"
-              variant="outline"
-            />
+        {loading ? (
+          <div className="text-center text-gray-500 py-12">
+            Chargement des événements...
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center">
-            <CarouselNext
-              className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -mr-6 md:-mr-8"
-              size="icon"
-              variant="outline"
-            />
+        ) : error ? (
+          <div className="text-center text-red-500 py-12">
+            Erreur lors du chargement des événements: {error}
           </div>
-        </Carousel>
+        ) : (
+          <Carousel
+            setApi={handleSetApi}
+            opts={{
+              align: 'center',
+              loop: true,
+            }}
+            className="relative w-full"
+            onSelect={() =>
+              carouselRef.current && handleSelect(carouselRef.current)
+            }
+          >
+            <CarouselContent className="-ml-4 md:-ml-6">
+              {displayedEvents.map((event, index) => (
+                <CarouselItem
+                  key={index}
+                  className="basis-full md:basis-1/2 lg:basis-1/3 px-4 md:px-6"
+                >
+                  <Card className="bg-white rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-green-950 transition-shadow duration-300">
+                    <div className="relative h-60 sm:h-72">
+                      <img
+                        src={event.image || '/default-placeholder.jpg'}
+                        alt={event.title}
+                        className="rounded-t-lg w-full h-full object-cover"
+                      />
+                    </div>
+                    <CardContent className="p-6 flex flex-col justify-between h-full">
+                      <div>
+                        <h3 className="text-xl font-bold text-[var(--base-green)]">
+                          {event.title}
+                        </h3>
+                        <p className="mt-2 text-gray-700">{event.description}</p>
+                      </div>
+                      <div className="mt-4 text-sm text-gray-500">
+                        📅 {event.date}
+                      </div>
+                      <Button
+                        className="cursor-pointer mt-4 bg-[var(--base-green)] text-white focus:ring-indigo-500"
+                        onClick={() => (window.location.href = event.link)}
+                      >
+                        En savoir plus
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="absolute inset-y-0 left-0 flex items-center">
+              <CarouselPrevious
+                className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -ml-6 md:-ml-8"
+                size="icon"
+                variant="outline"
+              />
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center">
+              <CarouselNext
+                className="bg-white text-gray-700 rounded-full shadow-md hover:bg-gray-100 focus:ring focus:ring-indigo-300 -mr-6 md:-mr-8"
+                size="icon"
+                variant="outline"
+              />
+            </div>
+          </Carousel>
+        )}
       </div>
     </div>
   );

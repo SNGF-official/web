@@ -3,7 +3,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       TINY_MCE_API_KEY: string;
-      BASE_URL: string;
+      VITE_BASE_URL: string;
     }
   }
 }
