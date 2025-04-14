@@ -8,12 +8,17 @@ import { ShopSection } from '@/components/shop/shop.tsx';
 import { ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { FAQSection } from '@/components/faq';
+import { PlantCarousel } from '@/components/slider/slider.tsx';
 
 const Landing = (): JSX.Element => {
   const sections = [
     {
       id: 'hero',
       component: <HeroSection />,
+    },
+    {
+      id: 'slider',
+      component: <PlantCarousel />,
     },
     {
       id: 'A propos',
