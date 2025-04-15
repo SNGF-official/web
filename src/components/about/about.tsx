@@ -35,7 +35,7 @@ const OrgChart = () => (
       <div className="text-center">
         <div className="bg-green-100 p-4 rounded-xl shadow-md">
           <p className="text-lg font-bold">Présidente</p>
-          <p>Madame Sahondra RAZANAMAHASOA</p>
+          <p>Fitia NyMahay</p>
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-6 justify-center">

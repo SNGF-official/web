@@ -18,12 +18,12 @@ import type {
   Plant,
 } from '../models/index';
 import {
-    PlantFromJSON,
-    PlantToJSON,
+  PlantFromJSON,
+  PlantToJSON,
 } from '../models/index';
 
 export interface CreatePlantRequest {
-    plant: Plant;
+  plant: Plant;
 }
 
 export interface GetListPlantRequest {
@@ -150,9 +150,9 @@ export class PlantsApi extends runtime.BaseAPI {
             );
         }
 
-        const queryParameters: any = {};
+    const queryParameters: any = {};
 
-        const headerParameters: runtime.HTTPHeaders = {};
+    const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
             path: `/plants/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -234,9 +234,9 @@ export type GetListPlantCategoryEnum = typeof GetListPlantCategoryEnum[keyof typ
  * @export
  */
 export const GetListPlantSizeEnum = {
-    Pm: 'PM',
-    Mm: 'MM',
-    Gm: 'GM'
+  Pm: 'PM',
+  Mm: 'MM',
+  Gm: 'GM'
 } as const;
 export type GetListPlantSizeEnum = typeof GetListPlantSizeEnum[keyof typeof GetListPlantSizeEnum];
 /**

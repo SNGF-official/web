@@ -1,21 +1,43 @@
-import React, { useState } from 'react';
+// @/components/product/productDetails.tsx
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaShoppingCart } from 'react-icons/fa';
-import { Product } from '@/lib/products.ts';
+import { Plant } from '../../../generated-client';
 
 interface ProductDetailProps {
-  product?: Product;
+  product?: Plant;
   open: boolean;
   onClose: () => void;
 }
 
 const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose }) => {
-  const [current, setCurrent] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const nextSlide = () => { if(product) setCurrent((prev) => (prev + 1) % product.images.length); };
-  const prevSlide = () => { if(product) setCurrent((prev) => (prev === 0 ? product.images.length - 1 : prev - 1)); };
-  const handleDotClick = (index: number) => { setCurrent(index); };
+  useEffect(() => {
+    // Reset current image index when a new product is opened
+    setCurrentImageIndex(0);
+  }, [product]);
+
+  const nextSlide = () => {
+    if (product?.image_urls && product.image_urls.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % product.image_urls.length);
+    }
+  };
+
+  const prevSlide = () => {
+    if (product?.image_urls && product.image_urls.length > 0) {
+      setCurrentImageIndex((prev) => (prev === 0 ? product.image_urls.length - 1 : prev - 1));
+    }
+  };
+
+  const handleDotClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  const currentImageUrl = product?.imageUrls && product.imageUrls.length > 0
+    ? product.imageUrls[0].image_urls
+    : null;
 
   return (
     <motion.div
@@ -34,11 +56,17 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
 
       {/* Slideshow */}
       <div className="relative h-64 mb-4 rounded-lg overflow-hidden">
-        <img
-          src={product?.images[current]}
-          alt={product?.name}
-          className="w-full h-full object-cover transition-all duration-500"
-        />
+        {currentImageUrl ? (
+          <img
+            src={currentImageUrl}
+            alt={product?.name}
+            className="w-full h-full object-cover transition-all duration-500"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
+            Pas d'image
+          </div>
+        )}
         <button
           onClick={prevSlide}
           className="absolute left-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 px-3 py-1 rounded-full shadow"
@@ -52,17 +80,19 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
           ›
         </button>
 
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-          {product?.images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => { handleDotClick(index); }}
-              className={`w-3 h-3 rounded-full ${
-                index === current ? 'bg-emerald-500' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
+        {product?.image_urls && product.image_urls.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+            {product.image_urls.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => { handleDotClick(index); }}
+                className={`w-3 h-3 rounded-full ${
+                  index === currentImageIndex ? 'bg-emerald-500' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Infos produit */}
@@ -84,7 +114,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
         >
           +
         </button>
-        <span className="text-gray-600">/ {product?.availability} dispo</span>
+        {/* {product?.availability && (
+          <span className="text-gray-600">/ {product.availability} dispo</span>
+        )} */}
       </div>
 
       {/* Prix + Commander */}

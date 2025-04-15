@@ -1,4 +1,4 @@
-/* tslint:disable */
+
 /* eslint-disable */
 /**
  * SNGF API
@@ -132,7 +132,7 @@ export function PlantFromJSON(json: any): Plant {
     return PlantFromJSONTyped(json, false);
 }
 
-export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Plant {
+export function PlantFromJSONTyped(json: any, _ignoreDiscriminator: boolean): Plant {
     if (json == null) {
         return json;
     }
@@ -154,7 +154,7 @@ export function PlantToJSON(json: any): Plant {
     return PlantToJSONTyped(json, false);
 }
 
-export function PlantToJSONTyped(value?: Plant | null, ignoreDiscriminator: boolean = false): any {
+export function PlantToJSONTyped(value?: Plant | null, _ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

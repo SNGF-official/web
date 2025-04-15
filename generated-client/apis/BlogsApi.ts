@@ -22,28 +22,21 @@ import {
     BlogToJSON,
 } from '../models/index';
 
-export interface CreateBlogRequest {
+export interface CrupdateBlogRequest {
+    id: string;
     blog: Blog;
 }
 
-export interface DeleteBlogRequest {
-    id: number;
-}
-
 export interface GetBlogByIDRequest {
-    id: number;
+    id: string;
 }
 
 export interface GetListBlogRequest {
     keyword?: string;
     status?: GetListBlogStatusEnum;
+    operatorId?: number;
     page?: number;
     pageSize?: number;
-}
-
-export interface UpdateBlogRequest {
-    id: number;
-    blog: Blog;
 }
 
 /**
@@ -52,14 +45,21 @@ export interface UpdateBlogRequest {
 export class BlogsApi extends runtime.BaseAPI {
 
     /**
-     * Add a new blog article.
-     * Add a new blog
+     * Update an existing blog article.
+     * Update a blog
      */
-    async createBlogRaw(requestParameters: CreateBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async crupdateBlogRaw(requestParameters: CrupdateBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == "") {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was " or undefined when calling crupdateBlog().'
+            );
+        }
+
         if (requestParameters['blog'] == null) {
             throw new runtime.RequiredError(
                 'blog',
-                'Required parameter "blog" was null or undefined when calling createBlog().'
+                'Required parameter "blog" was null or undefined when calling crupdateBlog().'
             );
         }
 
@@ -70,8 +70,8 @@ export class BlogsApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/blogs/`,
-            method: 'POST',
+            path: `/blogs/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
             body: BlogToJSON(requestParameters['blog']),
@@ -81,45 +81,11 @@ export class BlogsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Add a new blog article.
-     * Add a new blog
+     * Update an existing blog article.
+     * Update a blog
      */
-    async createBlog(requestParameters: CreateBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.createBlogRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Delete a blog article by its ID.
-     * Delete a blog
-     */
-    async deleteBlogRaw(requestParameters: DeleteBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling deleteBlog().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/blogs/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Delete a blog article by its ID.
-     * Delete a blog
-     */
-    async deleteBlog(requestParameters: DeleteBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.deleteBlogRaw(requestParameters, initOverrides);
+    async crupdateBlog(requestParameters: CrupdateBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.crupdateBlogRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -172,6 +138,10 @@ export class BlogsApi extends runtime.BaseAPI {
             queryParameters['status'] = requestParameters['status'];
         }
 
+        if (requestParameters['operatorId'] != null) {
+            queryParameters['operator_id'] = requestParameters['operatorId'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -199,50 +169,6 @@ export class BlogsApi extends runtime.BaseAPI {
     async getListBlog(requestParameters: GetListBlogRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Blog>> {
         const response = await this.getListBlogRaw(requestParameters, initOverrides);
         return await response.value();
-    }
-
-    /**
-     * Update an existing blog article.
-     * Update a blog
-     */
-    async updateBlogRaw(requestParameters: UpdateBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling updateBlog().'
-            );
-        }
-
-        if (requestParameters['blog'] == null) {
-            throw new runtime.RequiredError(
-                'blog',
-                'Required parameter "blog" was null or undefined when calling updateBlog().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/blogs/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: BlogToJSON(requestParameters['blog']),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Update an existing blog article.
-     * Update a blog
-     */
-    async updateBlog(requestParameters: UpdateBlogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.updateBlogRaw(requestParameters, initOverrides);
     }
 
 }

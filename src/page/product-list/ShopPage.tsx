@@ -97,7 +97,7 @@ const ShopPage = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {filteredProducts.map((product, index) => (
               <AnimatedProductCard
                 key={product.id}
