@@ -35,10 +35,10 @@ export interface Plant {
     size: PlantSizeEnum;
     /**
      * 
-     * @type {object}
+     * @type {Array<object>}
      * @memberof Plant
      */
-    prices: object;
+    prices: Array<object>;
     /**
      * 
      * @type {string}
@@ -76,7 +76,7 @@ export interface Plant {
      */
     status: PlantStatusEnum;
     /**
-     * Liste des images associées
+     * Listes des images associées
      * @type {Array<Image>}
      * @memberof Plant
      */

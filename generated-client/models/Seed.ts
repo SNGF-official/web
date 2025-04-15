@@ -70,7 +70,7 @@ export interface Seed {
      */
     status: SeedStatusEnum;
     /**
-     * Liste des images associées
+     * Listes des images associées
      * @type {Array<Image>}
      * @memberof Seed
      */

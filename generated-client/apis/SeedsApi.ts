@@ -28,19 +28,18 @@ export interface CreateSeedRequest {
 
 export interface GetListSeedRequest {
     name?: string;
-    category?: string;
-    unit?: string;
+    category?: GetListSeedCategoryEnum;
     status?: GetListSeedStatusEnum;
     page?: number;
     pageSize?: number;
 }
 
 export interface GetSeedByIDRequest {
-    id: number;
+    id: string;
 }
 
 export interface UpdateSeedRequest {
-    id: number;
+    id: string;
     seed: Seed;
 }
 
@@ -99,10 +98,6 @@ export class SeedsApi extends runtime.BaseAPI {
 
         if (requestParameters['category'] != null) {
             queryParameters['category'] = requestParameters['category'];
-        }
-
-        if (requestParameters['unit'] != null) {
-            queryParameters['unit'] = requestParameters['unit'];
         }
 
         if (requestParameters['status'] != null) {
@@ -219,6 +214,17 @@ export class SeedsApi extends runtime.BaseAPI {
 
 }
 
+/**
+ * @export
+ */
+export const GetListSeedCategoryEnum = {
+    Agroforestieres: 'AGROFORESTIERES',
+    EndemiquesAutochtones: 'ENDEMIQUES_AUTOCHTONES',
+    ExotiquesReboisement: 'EXOTIQUES_REBOISEMENT',
+    Ornementales: 'ORNEMENTALES',
+    Embroussaillements: 'EMBROUSSAILLEMENTS'
+} as const;
+export type GetListSeedCategoryEnum = typeof GetListSeedCategoryEnum[keyof typeof GetListSeedCategoryEnum];
 /**
  * @export
  */

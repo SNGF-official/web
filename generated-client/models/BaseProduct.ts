@@ -64,7 +64,7 @@ export interface BaseProduct {
      */
     status: BaseProductStatusEnum;
     /**
-     * Liste des images associées
+     * Listes des images associées
      * @type {Array<Image>}
      * @memberof BaseProduct
      */

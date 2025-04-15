@@ -28,7 +28,7 @@ export interface CreatePlantRequest {
 
 export interface GetListPlantRequest {
     name?: string;
-    category?: string;
+    category?: GetListPlantCategoryEnum;
     size?: GetListPlantSizeEnum;
     status?: GetListPlantStatusEnum;
     page?: number;
@@ -36,11 +36,11 @@ export interface GetListPlantRequest {
 }
 
 export interface GetPlantByIDRequest {
-    id: number;
+    id: string;
 }
 
 export interface UpdatePlantRequest {
-    id: number;
+    id: string;
     plant: Plant;
 }
 
@@ -219,6 +219,17 @@ export class PlantsApi extends runtime.BaseAPI {
 
 }
 
+/**
+ * @export
+ */
+export const GetListPlantCategoryEnum = {
+    Agroforestieres: 'AGROFORESTIERES',
+    EndemiquesAutochtones: 'ENDEMIQUES_AUTOCHTONES',
+    ExotiquesReboisement: 'EXOTIQUES_REBOISEMENT',
+    Ornementales: 'ORNEMENTALES',
+    Embroussaillements: 'EMBROUSSAILLEMENTS'
+} as const;
+export type GetListPlantCategoryEnum = typeof GetListPlantCategoryEnum[keyof typeof GetListPlantCategoryEnum];
 /**
  * @export
  */
