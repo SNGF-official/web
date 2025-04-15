@@ -22,9 +22,8 @@ import {
     EventToJSON,
 } from '../models/index';
 
-export interface CrupdateEventRequest {
+export interface DeleteEventRequest {
     id: number;
-    event: Event;
 }
 
 export interface GetEventByIDRequest {
@@ -35,9 +34,13 @@ export interface GetListEventRequest {
     keyword?: string;
     date?: Date;
     status?: GetListEventStatusEnum;
-    operatorId?: number;
     page?: number;
     pageSize?: number;
+}
+
+export interface UpdateEventRequest {
+    id: number;
+    event: Event;
 }
 
 /**
@@ -46,21 +49,14 @@ export interface GetListEventRequest {
 export class EventsApi extends runtime.BaseAPI {
 
     /**
-     * Update an existing event\'s information.
-     * Update an event
+     * Delete an event by its ID.
+     * Delete an event
      */
-    async crupdateEventRaw(requestParameters: CrupdateEventRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteEventRaw(requestParameters: DeleteEventRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling crupdateEvent().'
-            );
-        }
-
-        if (requestParameters['event'] == null) {
-            throw new runtime.RequiredError(
-                'event',
-                'Required parameter "event" was null or undefined when calling crupdateEvent().'
+                'Required parameter "id" was null or undefined when calling deleteEvent().'
             );
         }
 
@@ -68,25 +64,22 @@ export class EventsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters['Content-Type'] = 'application/json';
-
         const response = await this.request({
             path: `/events/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
+            method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-            body: EventToJSON(requestParameters['event']),
         }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
-     * Update an existing event\'s information.
-     * Update an event
+     * Delete an event by its ID.
+     * Delete an event
      */
-    async crupdateEvent(requestParameters: CrupdateEventRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.crupdateEventRaw(requestParameters, initOverrides);
+    async deleteEvent(requestParameters: DeleteEventRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteEventRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -143,10 +136,6 @@ export class EventsApi extends runtime.BaseAPI {
             queryParameters['status'] = requestParameters['status'];
         }
 
-        if (requestParameters['operatorId'] != null) {
-            queryParameters['operator_id'] = requestParameters['operatorId'];
-        }
-
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -174,6 +163,50 @@ export class EventsApi extends runtime.BaseAPI {
     async getListEvent(requestParameters: GetListEventRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Event>> {
         const response = await this.getListEventRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Update an existing event\'s information.
+     * Update an event
+     */
+    async updateEventRaw(requestParameters: UpdateEventRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling updateEvent().'
+            );
+        }
+
+        if (requestParameters['event'] == null) {
+            throw new runtime.RequiredError(
+                'event',
+                'Required parameter "event" was null or undefined when calling updateEvent().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/events/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EventToJSON(requestParameters['event']),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Update an existing event\'s information.
+     * Update an event
+     */
+    async updateEvent(requestParameters: UpdateEventRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.updateEventRaw(requestParameters, initOverrides);
     }
 
 }

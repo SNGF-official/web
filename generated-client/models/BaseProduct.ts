@@ -24,61 +24,49 @@ import {
 /**
  * 
  * @export
- * @interface Plant
+ * @interface BaseProduct
  */
-export interface Plant {
+export interface BaseProduct {
     /**
      * 
      * @type {string}
-     * @memberof Plant
-     */
-    size: PlantSizeEnum;
-    /**
-     * 
-     * @type {object}
-     * @memberof Plant
-     */
-    prices: object;
-    /**
-     * 
-     * @type {string}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
     id: string;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
-    category?: PlantCategoryEnum;
+    category?: BaseProductCategoryEnum;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
     description?: string;
     /**
      * 
      * @type {number}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
     quantity?: number;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
-    status: PlantStatusEnum;
+    status: BaseProductStatusEnum;
     /**
      * Liste des images associées
      * @type {Array<Image>}
-     * @memberof Plant
+     * @memberof BaseProduct
      */
     images?: Array<Image>;
 }
@@ -87,59 +75,45 @@ export interface Plant {
 /**
  * @export
  */
-export const PlantSizeEnum = {
-    Pm: 'PM',
-    Mm: 'MM',
-    Gm: 'GM'
-} as const;
-export type PlantSizeEnum = typeof PlantSizeEnum[keyof typeof PlantSizeEnum];
-
-/**
- * @export
- */
-export const PlantCategoryEnum = {
+export const BaseProductCategoryEnum = {
     Agroforestieres: 'AGROFORESTIERES',
     EndemiquesAutochtones: 'ENDEMIQUES_AUTOCHTONES',
     ExotiquesReboisement: 'EXOTIQUES_REBOISEMENT',
     Ornementales: 'ORNEMENTALES',
     Embroussaillements: 'EMBROUSSAILLEMENTS'
 } as const;
-export type PlantCategoryEnum = typeof PlantCategoryEnum[keyof typeof PlantCategoryEnum];
+export type BaseProductCategoryEnum = typeof BaseProductCategoryEnum[keyof typeof BaseProductCategoryEnum];
 
 /**
  * @export
  */
-export const PlantStatusEnum = {
+export const BaseProductStatusEnum = {
     Active: 'ACTIVE',
     Inactive: 'INACTIVE'
 } as const;
-export type PlantStatusEnum = typeof PlantStatusEnum[keyof typeof PlantStatusEnum];
+export type BaseProductStatusEnum = typeof BaseProductStatusEnum[keyof typeof BaseProductStatusEnum];
 
 
 /**
- * Check if a given object implements the Plant interface.
+ * Check if a given object implements the BaseProduct interface.
  */
-export function instanceOfPlant(value: object): value is Plant {
-    if (!('size' in value) || value['size'] === undefined) return false;
-    if (!('prices' in value) || value['prices'] === undefined) return false;
+export function instanceOfBaseProduct(value: object): value is BaseProduct {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
     return true;
 }
 
-export function PlantFromJSON(json: any): Plant {
-    return PlantFromJSONTyped(json, false);
+export function BaseProductFromJSON(json: any): BaseProduct {
+    return BaseProductFromJSONTyped(json, false);
 }
 
-export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Plant {
+export function BaseProductFromJSONTyped(json: any, ignoreDiscriminator: boolean): BaseProduct {
     if (json == null) {
         return json;
     }
     return {
         
-        'size': json['size'],
-        'prices': json['prices'],
         'id': json['id'],
         'name': json['name'],
         'category': json['category'] == null ? undefined : json['category'],
@@ -150,19 +124,17 @@ export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pla
     };
 }
 
-export function PlantToJSON(json: any): Plant {
-    return PlantToJSONTyped(json, false);
+export function BaseProductToJSON(json: any): BaseProduct {
+    return BaseProductToJSONTyped(json, false);
 }
 
-export function PlantToJSONTyped(value?: Plant | null, ignoreDiscriminator: boolean = false): any {
+export function BaseProductToJSONTyped(value?: BaseProduct | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'size': value['size'],
-        'prices': value['prices'],
         'id': value['id'],
         'name': value['name'],
         'category': value['category'],

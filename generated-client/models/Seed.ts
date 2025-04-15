@@ -24,61 +24,55 @@ import {
 /**
  * 
  * @export
- * @interface Plant
+ * @interface Seed
  */
-export interface Plant {
+export interface Seed {
+    /**
+     * 
+     * @type {number}
+     * @memberof Seed
+     */
+    pricePerKilo: number;
     /**
      * 
      * @type {string}
-     * @memberof Plant
-     */
-    size: PlantSizeEnum;
-    /**
-     * 
-     * @type {object}
-     * @memberof Plant
-     */
-    prices: object;
-    /**
-     * 
-     * @type {string}
-     * @memberof Plant
+     * @memberof Seed
      */
     id: string;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof Seed
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof Seed
      */
-    category?: PlantCategoryEnum;
+    category?: SeedCategoryEnum;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof Seed
      */
     description?: string;
     /**
      * 
      * @type {number}
-     * @memberof Plant
+     * @memberof Seed
      */
     quantity?: number;
     /**
      * 
      * @type {string}
-     * @memberof Plant
+     * @memberof Seed
      */
-    status: PlantStatusEnum;
+    status: SeedStatusEnum;
     /**
      * Liste des images associées
      * @type {Array<Image>}
-     * @memberof Plant
+     * @memberof Seed
      */
     images?: Array<Image>;
 }
@@ -87,59 +81,47 @@ export interface Plant {
 /**
  * @export
  */
-export const PlantSizeEnum = {
-    Pm: 'PM',
-    Mm: 'MM',
-    Gm: 'GM'
-} as const;
-export type PlantSizeEnum = typeof PlantSizeEnum[keyof typeof PlantSizeEnum];
-
-/**
- * @export
- */
-export const PlantCategoryEnum = {
+export const SeedCategoryEnum = {
     Agroforestieres: 'AGROFORESTIERES',
     EndemiquesAutochtones: 'ENDEMIQUES_AUTOCHTONES',
     ExotiquesReboisement: 'EXOTIQUES_REBOISEMENT',
     Ornementales: 'ORNEMENTALES',
     Embroussaillements: 'EMBROUSSAILLEMENTS'
 } as const;
-export type PlantCategoryEnum = typeof PlantCategoryEnum[keyof typeof PlantCategoryEnum];
+export type SeedCategoryEnum = typeof SeedCategoryEnum[keyof typeof SeedCategoryEnum];
 
 /**
  * @export
  */
-export const PlantStatusEnum = {
+export const SeedStatusEnum = {
     Active: 'ACTIVE',
     Inactive: 'INACTIVE'
 } as const;
-export type PlantStatusEnum = typeof PlantStatusEnum[keyof typeof PlantStatusEnum];
+export type SeedStatusEnum = typeof SeedStatusEnum[keyof typeof SeedStatusEnum];
 
 
 /**
- * Check if a given object implements the Plant interface.
+ * Check if a given object implements the Seed interface.
  */
-export function instanceOfPlant(value: object): value is Plant {
-    if (!('size' in value) || value['size'] === undefined) return false;
-    if (!('prices' in value) || value['prices'] === undefined) return false;
+export function instanceOfSeed(value: object): value is Seed {
+    if (!('pricePerKilo' in value) || value['pricePerKilo'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
     return true;
 }
 
-export function PlantFromJSON(json: any): Plant {
-    return PlantFromJSONTyped(json, false);
+export function SeedFromJSON(json: any): Seed {
+    return SeedFromJSONTyped(json, false);
 }
 
-export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Plant {
+export function SeedFromJSONTyped(json: any, ignoreDiscriminator: boolean): Seed {
     if (json == null) {
         return json;
     }
     return {
         
-        'size': json['size'],
-        'prices': json['prices'],
+        'pricePerKilo': json['pricePerKilo'],
         'id': json['id'],
         'name': json['name'],
         'category': json['category'] == null ? undefined : json['category'],
@@ -150,19 +132,18 @@ export function PlantFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pla
     };
 }
 
-export function PlantToJSON(json: any): Plant {
-    return PlantToJSONTyped(json, false);
+export function SeedToJSON(json: any): Seed {
+    return SeedToJSONTyped(json, false);
 }
 
-export function PlantToJSONTyped(value?: Plant | null, ignoreDiscriminator: boolean = false): any {
+export function SeedToJSONTyped(value?: Seed | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'size': value['size'],
-        'prices': value['prices'],
+        'pricePerKilo': value['pricePerKilo'],
         'id': value['id'],
         'name': value['name'],
         'category': value['category'],

@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { OrderItemsInner } from './OrderItemsInner';
+import type { OrderItem } from './OrderItem';
 import {
-    OrderItemsInnerFromJSON,
-    OrderItemsInnerFromJSONTyped,
-    OrderItemsInnerToJSON,
-    OrderItemsInnerToJSONTyped,
-} from './OrderItemsInner';
+    OrderItemFromJSON,
+    OrderItemFromJSONTyped,
+    OrderItemToJSON,
+    OrderItemToJSONTyped,
+} from './OrderItem';
 
 /**
  * 
@@ -53,10 +53,10 @@ export interface Order {
     number?: string;
     /**
      * 
-     * @type {Array<OrderItemsInner>}
+     * @type {Array<OrderItem>}
      * @memberof Order
      */
-    items: Array<OrderItemsInner>;
+    items: Array<OrderItem>;
     /**
      * 
      * @type {Date}
@@ -104,10 +104,10 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
         
         'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
-        'customerEmail': json['customer_email'] == null ? undefined : json['customer_email'],
+        'customerEmail': json['customerEmail'] == null ? undefined : json['customerEmail'],
         'number': json['number'] == null ? undefined : json['number'],
-        'items': ((json['items'] as Array<any>).map(OrderItemsInnerFromJSON)),
-        'submittedAt': json['submitted_at'] == null ? undefined : (new Date(json['submitted_at'])),
+        'items': ((json['items'] as Array<any>).map(OrderItemFromJSON)),
+        'submittedAt': json['submittedAt'] == null ? undefined : (new Date(json['submittedAt'])),
         'status': json['status'] == null ? undefined : json['status'],
     };
 }
@@ -125,10 +125,10 @@ export function OrderToJSONTyped(value?: Order | null, ignoreDiscriminator: bool
         
         'id': value['id'],
         'name': value['name'],
-        'customer_email': value['customerEmail'],
+        'customerEmail': value['customerEmail'],
         'number': value['number'],
-        'items': ((value['items'] as Array<any>).map(OrderItemsInnerToJSON)),
-        'submitted_at': value['submittedAt'] == null ? undefined : ((value['submittedAt']).toISOString()),
+        'items': ((value['items'] as Array<any>).map(OrderItemToJSON)),
+        'submittedAt': value['submittedAt'] == null ? undefined : ((value['submittedAt']).toISOString()),
         'status': value['status'],
     };
 }

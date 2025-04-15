@@ -100,7 +100,7 @@ export function EventFromJSONTyped(json: any, ignoreDiscriminator: boolean): Eve
         'description': json['description'] == null ? undefined : json['description'],
         'date': (new Date(json['date'])),
         'location': json['location'] == null ? undefined : json['location'],
-        'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
+        'imageUrl': json['imageUrl'] == null ? undefined : json['imageUrl'],
         'status': json['status'],
     };
 }
@@ -121,7 +121,7 @@ export function EventToJSONTyped(value?: Event | null, ignoreDiscriminator: bool
         'description': value['description'],
         'date': ((value['date']).toISOString()),
         'location': value['location'],
-        'image_url': value['imageUrl'],
+        'imageUrl': value['imageUrl'],
         'status': value['status'],
     };
 }
