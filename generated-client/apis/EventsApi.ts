@@ -1,4 +1,4 @@
-
+/* tslint:disable */
 /* eslint-disable */
 /**
  * SNGF API
@@ -23,12 +23,12 @@ import {
 } from '../models/index';
 
 export interface CrupdateEventRequest {
-    id: string;
+    id: number;
     event: Event;
 }
 
 export interface GetEventByIDRequest {
-    id: string;
+    id: number;
 }
 
 export interface GetListEventRequest {
