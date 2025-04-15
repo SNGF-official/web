@@ -40,4 +40,4 @@ jobs:
         run: |
           git add .
           git commit -m "Update generated OpenAPI client"
-          git push
+          git push -f
