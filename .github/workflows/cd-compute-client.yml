@@ -38,6 +38,6 @@ jobs:
       # Commit et push des fichiers générés
       - name: Commit and push the generated client
         run: |
-          git add generated-client
+          git add .
           git commit -m "Update generated OpenAPI client"
           git push
