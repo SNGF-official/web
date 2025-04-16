@@ -6,8 +6,6 @@ const blogsApi = new BlogsApi();
 
 interface UseBlogParams {
   keyword?: string;
-  status?: 'ACTIVE' | 'INACTIVE';
-  operatorId?: number;
   page?: number;
   pageSize?: number;
   sort_by?: 'asc' | 'desc';
@@ -21,7 +19,6 @@ interface UseBlogResult {
 
 export const useBlog = ({
                           keyword,
-                          operatorId,
                           page,
                           pageSize,
                           sort_by,
@@ -37,7 +34,6 @@ export const useBlog = ({
       try {
         const data = await blogsApi.getListBlog({
           keyword,
-          operatorId,
           page,
           pageSize,
         });
@@ -58,7 +54,7 @@ export const useBlog = ({
     };
 
     fetchBlogs().then(r => { console.log(r); }).catch((e: unknown) => {console.log(e)});
-  }, [keyword, operatorId, page, pageSize, sort_by]);
+  }, [keyword, page, pageSize, sort_by]);
 
   return { blogs, loading, error };
 };
