@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { Loader } from '@/components/loading';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { SeedPage } from '@/components/shop/shopSeed.tsx';
-import { PlantPage } from '@/components/shop/shopPlant.tsx';
+import { SeedPage } from '@/page/product-list/ShopSeed.tsx';
+import { PlantPage } from '@/page/product-list/ShopPlant.tsx';
 
 const LandingPage = lazy(() =>
   import('./page/landing/Landing.tsx').then((module) => ({

@@ -1,20 +1,17 @@
 import { useState, useCallback } from 'react';
-import {
-  Plant,
-  PlantsApi,
-} from 'generated-client';
+import { Seed, SeedsApi } from 'generated-client';
 import { ProductCard, ProductDetail } from '@/components/product';
 import { XIcon } from 'lucide-react';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { NavigationBar } from '@/components/navbar';
 import { useRef } from 'react';
-import { usePlants } from '@/hooks/usePlant.ts';
+import { useSeeds } from '@/hooks/useSeed';
 
 const AnimatedPlantCard = ({
-                             plant,
+                             seed,
                              onClick,
                            }: {
-  plant: Plant;
+  seed: Seed;
   onClick: (id: string) => void;
 }) => {
   const ref = useRef(null);
@@ -30,42 +27,44 @@ const AnimatedPlantCard = ({
         ease: "easeOut",
       }}
     >
-      <ProductCard product={plant as never} onClick={() => { onClick(plant.id); }} />
+      <ProductCard product={seed as never} onClick={() => { onClick(seed.id); }} />
     </motion.div>
   );
 };
 
-const PlantPage = () => {
-  const [selectedPlantId, setSelectedPlantId] = useState<string | undefined>(undefined);
-  const [selectedPlant, setSelectedPlant] = useState<Plant | undefined>(undefined);
+const SeedPage = () => {
+  const [selectedSeedId, setSelectedPlantId] = useState<string | undefined>(undefined);
+  const [selectedSeed, setSelectedPlant] = useState<Seed | undefined>(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [search, setSearch] = useState(''); // Make search stateful
+  const [search,] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
-  const { plants, } = usePlants({
-    page,
-    pageSize,
+  const { seeds, loading, error } = useSeeds({
+    keyword: search,
+    page: page,
+    pageSize: pageSize,
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const plantsApi = new PlantsApi(); // Initialize API client
-
-  const fetchPlantDetails = useCallback(async (id: string) => {
+  const fetchSeedDetails = useCallback(async (id: string) => {
     try {
-      const details = await plantsApi.getPlantByID({ id });
+      const seedsApi = new SeedsApi();
+      const details = await seedsApi.getSeedByID({ id: id });
       setSelectedPlant(details);
       setShowModal(true);
     } catch (err) {
-      console.error("Erreur lors du chargement des détails de la plante:", err);
+      console.error("Erreur lors du chargement des détails de la graine:", err);
     }
-  }, [plantsApi]);
+  }, []);
 
-  const handlePlantClick = useCallback((id: string) => {
-    fetchPlantDetails(id).then(r => { console.log("okoko :"+r); });
-  }, [fetchPlantDetails]);
+  const handleSeedClick = useCallback((id: string) => {
+    fetchSeedDetails(id)
+      .then(r => { console.log(r); })
+      .catch((reason: unknown) => { console.log(reason); });
+  }, [fetchSeedDetails]);
 
   const closeModal = useCallback(() => {
+    setSelectedPlantId(undefined);
     setShowModal(false);
   }, []);
 
@@ -76,64 +75,47 @@ const PlantPage = () => {
 
   const navList = [
     { name: 'A propos', href: '/home#A propos' },
-    { name: 'Evenement', href: '/home#Evenement' },
-    { name: 'FAQ', href: '/home#FAQ' },
+    { name: 'Graines', href: '/shop/seeds' },
+    { name: 'Plantes', href: '/shop/plants' },
   ];
 
   const handleLoadMore = useCallback(() => {
     setPage((prevPage) => prevPage + 1);
   }, []);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-    setPage(1); // Reset page on new search for proper filtering
-  };
-
   return (
     <>
       <NavigationBar elements={navList} />
       <div className="relative min-h-screen bg-white flex">
-        {/* Sidebar desktop (vous pouvez ajouter des filtres spécifiques aux plantes ici) */}
+        {/* Sidebar desktop (vous pouvez ajouter des filtres spécifiques aux graines ici) */}
         <div className="hidden md:flex flex-col w-1/6 p-4">
-          <input
-            type="text"
-            placeholder="Rechercher par nom"
-            value={search}
-            onChange={handleSearchChange}
-            className="mb-2 p-2 border rounded"
-          />
-          {/* Add other filter controls here */}
+          {/* <Filters ... /> */}
         </div>
 
-        {/* Partie produits (plantes) */}
-        <div className={`w-full md:${selectedPlantId ? 'w-1/3' : 'w-5/6'} overflow-y-auto h-screen p-4 transition-all duration-300`}>
+        {/* Partie produits (graines) */}
+        <div className={`w-full md:${selectedSeedId ? 'w-1/3' : 'w-5/6'} overflow-y-auto h-screen p-4 transition-all duration-300`}>
           <div className="md:hidden mb-4">
-            <input
-              type="text"
-              placeholder="Rechercher par nom"
-              value={search}
-              onChange={handleSearchChange}
-              className="mb-2 p-2 border rounded w-full"
-            />
-            {/* Add other mobile filter controls here */}
+            {/* <Filters ... /> */}
           </div>
 
-          <h2>Boutique Plantes</h2>
+          <h2>Boutique Graines</h2>
 
-          {plants.length > 0 ? (
+          {loading ? (
+            <div>Chargement des graines...</div>
+          ) : error ? (
+            <div>Erreur : {error}</div>
+          ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {plants.map((plant) => (
+              {seeds.map((plant) => (
                 <AnimatedPlantCard
                   key={plant.id}
-                  plant={plant}
-                  onClick={handlePlantClick}
+                  seed={plant}
+                  onClick={handleSeedClick}
                 />
               ))}
             </div>
-          ) : (
-            <div>Aucune plante trouvée.</div>
           )}
-          {plants.length === pageSize && (
+          {!loading && seeds.length === pageSize && (
             <div className="flex justify-center mt-8">
               <button
                 onClick={handleLoadMore}
@@ -147,9 +129,9 @@ const PlantPage = () => {
 
         {/* ProductDetail Desktop avec animation */}
         <AnimatePresence>
-          {selectedPlant && (
+          {selectedSeed && (
             <motion.div
-              key="product-detail"
+              key="plant-detail"
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
@@ -160,19 +142,15 @@ const PlantPage = () => {
                 className="text-sm text-gray-500 mb-4 flex items-center hover:text-gray-800"
                 onClick={resetSelection}
               >
-                ← Retour aux produits
+                ← Retour aux graines
               </button>
-              <ProductDetail
-                product={selectedPlant}
-                open={!!selectedPlant}
-                onClose={resetSelection}
-              />
+              <ProductDetail product={selectedSeed as never} open={!!selectedSeed} onClose={resetSelection} />
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Modal mobile */}
-        {showModal && selectedPlant && (
+        {showModal && selectedSeed && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center md:hidden z-50">
             <button
               className="absolute top-2 right-2 text-gray-500 text-xl"
@@ -180,7 +158,7 @@ const PlantPage = () => {
             >
               <XIcon />
             </button>
-            <ProductDetail product={selectedPlant as never} open={!!selectedPlant} onClose={resetSelection} />
+            <ProductDetail product={selectedSeed as never} open={!!selectedSeed} onClose={resetSelection} />
           </div>
         )}
       </div>
@@ -188,4 +166,4 @@ const PlantPage = () => {
   );
 };
 
-export { PlantPage };
+export { SeedPage };

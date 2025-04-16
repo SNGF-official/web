@@ -1,5 +1,8 @@
 import { useState, useCallback } from 'react';
-import { Plant, PlantCategoryEnum, PlantsApi } from 'generated-client';
+import {
+  Plant,
+  PlantsApi,
+} from 'generated-client';
 import { ProductCard, ProductDetail } from '@/components/product';
 import { XIcon } from 'lucide-react';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
@@ -32,45 +35,37 @@ const AnimatedPlantCard = ({
   );
 };
 
-const SeedPage = () => {
+const PlantPage = () => {
   const [selectedPlantId, setSelectedPlantId] = useState<string | undefined>(undefined);
   const [selectedPlant, setSelectedPlant] = useState<Plant | undefined>(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [search,] = useState('');
-  const [filterAvailability,] = useState<'all' | 'active' | 'inactive'>('all');
+  const [search, setSearch] = useState(''); // Make search stateful
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
-  const { plants, loading, error } = usePlants({
-    category: PlantCategoryEnum.Seed,
-    keyword: search,
-    status:
-      filterAvailability === 'active'
-        ? 'ACTIVE'
-        : filterAvailability === 'inactive'
-          ? 'INACTIVE'
-          : undefined,
-    page: page,
-    pageSize: pageSize,
+  const { plants, } = usePlants({
+    page,
+    pageSize,
   });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const plantsApi = new PlantsApi(); // Initialize API client
 
   const fetchPlantDetails = useCallback(async (id: string) => {
     try {
-      const plantsApi = new PlantsApi();
-      const details = await plantsApi.getPlantByID({ id: parseInt(id) });
+      const details = await plantsApi.getPlantByID({ id });
       setSelectedPlant(details);
       setShowModal(true);
     } catch (err) {
-      console.error("Erreur lors du chargement des détails de la graine:", err);
+      console.error("Erreur lors du chargement des détails de la plante:", err);
     }
-  }, []);
+  }, [plantsApi]);
 
-  const handlePlantClick = useCallback((id: string) => {
-    fetchPlantDetails(id);
+  const handlePlantClick = useCallback(async (id: string) => {
+    await fetchPlantDetails(id).then(r => { console.log("okoko :"+r); });
   }, [fetchPlantDetails]);
 
   const closeModal = useCallback(() => {
-    setSelectedPlantId(undefined);
     setShowModal(false);
   }, []);
 
@@ -81,36 +76,51 @@ const SeedPage = () => {
 
   const navList = [
     { name: 'A propos', href: '/home#A propos' },
-    { name: 'Evenement', href: '/home#Evenement' },
-    { name: 'FAQ', href: '/home#FAQ' },
+    { name: 'Graines', href: '/shop/seeds' },
+    { name: 'Plantes', href: '/shop/plants' },
   ];
 
   const handleLoadMore = useCallback(() => {
     setPage((prevPage) => prevPage + 1);
   }, []);
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+    setPage(1); // Reset page on new search for proper filtering
+  };
+
   return (
     <>
       <NavigationBar elements={navList} />
       <div className="relative min-h-screen bg-white flex">
-        {/* Sidebar desktop (vous pouvez ajouter des filtres spécifiques aux graines ici) */}
+        {/* Sidebar desktop (vous pouvez ajouter des filtres spécifiques aux plantes ici) */}
         <div className="hidden md:flex flex-col w-1/6 p-4">
-          {/* <Filters ... /> */}
+          <input
+            type="text"
+            placeholder="Rechercher par nom"
+            value={search}
+            onChange={handleSearchChange}
+            className="mb-2 p-2 border rounded"
+          />
+          {/* Add other filter controls here */}
         </div>
 
-        {/* Partie produits (graines) */}
+        {/* Partie produits (plantes) */}
         <div className={`w-full md:${selectedPlantId ? 'w-1/3' : 'w-5/6'} overflow-y-auto h-screen p-4 transition-all duration-300`}>
           <div className="md:hidden mb-4">
-            {/* <Filters ... /> */}
+            <input
+              type="text"
+              placeholder="Rechercher par nom"
+              value={search}
+              onChange={handleSearchChange}
+              className="mb-2 p-2 border rounded w-full"
+            />
+            {/* Add other mobile filter controls here */}
           </div>
 
-          <h2>Boutique Graines</h2>
+          <h2>Boutique Plantes</h2>
 
-          {loading ? (
-            <div>Chargement des graines...</div>
-          ) : error ? (
-            <div>Erreur : {error}</div>
-          ) : (
+          {plants.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {plants.map((plant) => (
                 <AnimatedPlantCard
@@ -120,8 +130,10 @@ const SeedPage = () => {
                 />
               ))}
             </div>
+          ) : (
+            <div>Aucune plante trouvée.</div>
           )}
-          {!loading && plants.length === pageSize && (
+          {plants.length === pageSize && (
             <div className="flex justify-center mt-8">
               <button
                 onClick={handleLoadMore}
@@ -137,7 +149,7 @@ const SeedPage = () => {
         <AnimatePresence>
           {selectedPlant && (
             <motion.div
-              key="plant-detail"
+              key="product-detail"
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
@@ -148,9 +160,13 @@ const SeedPage = () => {
                 className="text-sm text-gray-500 mb-4 flex items-center hover:text-gray-800"
                 onClick={resetSelection}
               >
-                ← Retour aux graines
+                ← Retour aux produits
               </button>
-              <ProductDetail product={selectedPlant as never} open={!!selectedPlant} onClose={resetSelection} />
+              <ProductDetail
+                product={selectedPlant}
+                open={!!selectedPlant}
+                onClose={resetSelection}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -172,4 +188,4 @@ const SeedPage = () => {
   );
 };
 
-export { SeedPage };
+export { PlantPage };
