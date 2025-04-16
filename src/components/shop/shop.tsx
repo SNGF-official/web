@@ -73,9 +73,9 @@ const ShopSection: React.FC = () => {
           <div className="mt-8 flex flex-wrap gap-4 items-center justify-center">
             <Button
               className="cursor-pointer  bg-[var(--base-green)] hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-200"
-              onClick={handleOpenModal}
+              onClick={() => window.location.href = '/shop/seeds'}
             >
-              🌱 Voir la boutique
+              🌿 Boutique Graînes
             </Button>
             <Button
               variant="outline"
@@ -83,6 +83,12 @@ const ShopSection: React.FC = () => {
               onClick={() => window.location.href = '/shop/'}
             >
               🔍 Explorer les espèces
+            </Button>
+            <Button
+              className="cursor-pointer  bg-[var(--base-green)] hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-200"
+              onClick={() => window.location.href = '/shop/plants'}
+            >
+              🌱 Boutique Plantes
             </Button>
           </div>
         </div>

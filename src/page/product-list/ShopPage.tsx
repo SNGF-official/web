@@ -65,8 +65,8 @@ const ShopPage = () => {
   );
   const navList = [
     { name: 'A propos', href: '/home#A propos' },
-    { name: 'Evenement', href: '/home#Evenement' },
-    { name: 'FAQ', href: '/home#FAQ' },
+    { name: 'Graines', href: '/shop/seeds' },
+    { name: 'Plantes', href: '/shop/plants' },
   ];
   return (
     <>
