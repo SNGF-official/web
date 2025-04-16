@@ -7,7 +7,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
-  const firstImage = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0].image_urls : null;
+  const firstImage = product.images[0].image && product.images.length > 0 ? product.images[0].image : null;
 
   return (
     <div

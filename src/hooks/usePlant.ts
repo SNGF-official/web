@@ -1,69 +1,49 @@
-import { useEffect, useState } from 'react';
-import { PlantsApi, PlantCategoryEnum } from 'generated-client'; // Importez PlantCategoryEnum
-import { Plant } from 'generated-client';
-
-const plantsApi = new PlantsApi();
+import { useState, useEffect } from 'react';
+import { PlantsApi, Plant, GetListPlantCategoryEnum, GetListPlantSizeEnum } from 'generated-client';
 
 interface UsePlantsParams {
+  category?: GetListPlantCategoryEnum;
+  size?: GetListPlantSizeEnum;
   keyword?: string;
-  category?: PlantCategoryEnum; // Utilisez le type enum de votre client API
-  size?: 'XS' | 'S' | 'M' | 'L' | 'XL';
-  status?: 'ACTIVE' | 'INACTIVE';
   page?: number;
   pageSize?: number;
-  sort_by?: 'asc' | 'desc';
 }
 
-interface UsePlantsResult {
-  plants: Plant[];
-  loading: boolean;
-  error: string;
-}
-
-export const usePlants = ({
-                            keyword,
+export function usePlants({
                             category,
                             size,
-                            status,
-                            page,
-                            pageSize,
-                            sort_by,
-                          }: UsePlantsParams): UsePlantsResult => {
+                            keyword,
+                            page = 1,
+                            pageSize = 12,
+                          }: UsePlantsParams) {
   const [plants, setPlants] = useState<Plant[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPlants = async () => {
       setLoading(true);
-      setError('');
+      setError(null);
       try {
-        const data = await plantsApi.getListPlant({
+        const api = new PlantsApi();
+        const response = await api.getListPlant({
+          category,
+          size,
           name: keyword,
-          category: category,
-          size: size,
-          status: status,
-          page: page,
-          pageSize: pageSize,
+          page,
+          pageSize,
         });
-
-        const sortedPlants =
-          sort_by === 'asc'
-            ? [...data].sort((a, b) => a.name.localeCompare(b.name))
-            : sort_by === 'desc'
-              ? [...data].sort((a, b) => b.name.localeCompare(a.name))
-              : data;
-
-        setPlants(sortedPlants);
+        setPlants(response);
       } catch (err) {
-        setError(`Erreur lors du chargement des plantes : ${String(err)}`);
+        console.error('Erreur lors du chargement des plantes :', err);
+        setError('Erreur lors du chargement des plantes.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPlants().then(r => { console.log(r); }).catch((e: unknown) => { console.log(e); });
-  }, [keyword, category, size, status, page, pageSize, sort_by]);
+    fetchPlants().then(r => { console.log(r); });
+  }, [category, size, keyword, page, pageSize]);
 
   return { plants, loading, error };
-};
+}

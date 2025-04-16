@@ -1,8 +1,8 @@
 // @/components/product/productDetails.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
-import { FaShoppingCart } from 'react-icons/fa';
-import { Plant } from '../../../generated-client';
+import { FaShoppingCart, FaQuestionCircle } from 'react-icons/fa'; // Import question mark icon
+import { Plant, PlantSizePrice } from '../../../generated-client';
 
 interface ProductDetailProps {
   product?: Plant;
@@ -13,21 +13,28 @@ interface ProductDetailProps {
 const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedPrice, setSelectedPrice] = useState<PlantSizePrice | undefined>(undefined);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   useEffect(() => {
-    // Reset current image index when a new product is opened
     setCurrentImageIndex(0);
+    // Initialize selected price with the first available price
+    if (product?.prices && product.prices.length > 0) {
+      setSelectedPrice(product.prices[0]);
+    } else {
+      setSelectedPrice(undefined);
+    }
   }, [product]);
 
   const nextSlide = () => {
-    if (product?.image_urls && product.image_urls.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % product.image_urls.length);
+    if (product?.images && product.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
     }
   };
 
   const prevSlide = () => {
-    if (product?.image_urls && product.image_urls.length > 0) {
-      setCurrentImageIndex((prev) => (prev === 0 ? product.image_urls.length - 1 : prev - 1));
+    if (product?.images && product.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev === 0 ? product.images.length - 1 : prev - 1));
     }
   };
 
@@ -35,8 +42,17 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
     setCurrentImageIndex(index);
   };
 
-  const currentImageUrl = product?.imageUrls && product.imageUrls.length > 0
-    ? product.imageUrls[0].image_urls
+  const handleSizeSelect = (price: PlantSizePrice) => {
+    setSelectedPrice(price);
+  };
+
+  const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10);
+    setQuantity(isNaN(value) ? 1 : value);
+  };
+
+  const currentImageUrl = product?.images && product.images.length > 0
+    ? product.images[currentImageIndex]?.image
     : null;
 
   return (
@@ -55,12 +71,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
       </button>
 
       {/* Slideshow */}
-      <div className="relative h-64 mb-4 rounded-lg overflow-hidden">
+      <div className="relative h-[40vh] w-full mb-2 rounded-lg overflow-hidden">
         {currentImageUrl ? (
           <img
             src={currentImageUrl}
             alt={product?.name}
-            className="w-full h-full object-cover transition-all duration-500"
+            className="h-full w-full object-cover rounded-xl transition-all duration-500"
           />
         ) : (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
@@ -80,9 +96,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
           ›
         </button>
 
-        {product?.image_urls && product.image_urls.length > 1 && (
+        {product?.images && product.images.length > 1 && (
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-            {product.image_urls.map((_, index) => (
+            {product.images.map((_, index) => (
               <button
                 key={index}
                 onClick={() => { handleDotClick(index); }}
@@ -95,36 +111,93 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, open, onClose })
         )}
       </div>
 
+      {/* Taille et Prix */}
+      <div className="flex flex-col gap-2 mb-4">
+        <div className="flex flex-wrap gap-2">
+          {product?.prices && product.prices.length > 0 ? (
+            product.prices.map((price) => (
+              <button
+                key={price.size}
+                onClick={() => { handleSizeSelect(price); }}
+                className={`inline-block px-3 py-1 rounded-full text-sm font-semibold text-gray-700 bg-gray-200 hover:bg-emerald-200 transition duration-200 ${
+                  selectedPrice?.size === price.size ? 'bg-emerald-400 text-white' : ''
+                }`}
+              >
+                {price.size}
+              </button>
+            ))
+          ) : (
+            <span className="text-gray-500">Prix non disponible</span>
+          )}
+        </div>
+
+        {/* Prix + Info */}
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-bold text-emerald-700">
+            {selectedPrice ? `${selectedPrice.price} Ar` : '---'}
+          </span>
+          <div
+            className="relative"
+            onMouseEnter={() => { setIsTooltipVisible(true); }}
+            onMouseLeave={() => { setIsTooltipVisible(false); }}
+          >
+            <FaQuestionCircle className="text-gray-400 cursor-pointer" />
+            <div
+              className={`absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-gray-800 text-white text-xs rounded py-1 px-2 shadow-md transition-opacity duration-300 ${
+                isTooltipVisible ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              Prix destiné aux commerçants locaux malgaches
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Infos produit */}
       <h2 className="text-2xl font-bold text-emerald-900 mb-2">{product?.name}</h2>
-      <p className="text-gray-700 mb-4">{product?.description}</p>
+      <p className="text-gray-700 mb-2">{product?.description}</p>
+
+      {/* Quantité Disponible */}
+      {product?.quantity !== undefined && (
+        <p className="text-sm text-gray-600 mb-2">
+          Quantité disponible : <span className="font-semibold">{product.quantity}</span>
+        </p>
+      )}
 
       {/* Quantité */}
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-4 mb-2">
         <button
           onClick={() => { setQuantity((q) => Math.max(1, q - 1)); }}
           className="px-3 py-1 bg-emerald-200 rounded"
         >
           -
         </button>
-        <span className="font-medium">{quantity}</span>
+        <input
+          type="number"
+          min="1"
+          value={quantity}
+          onChange={handleQuantityChange}
+          className="w-16 text-center border border-gray-300 rounded"
+        />
         <button
           onClick={() => { setQuantity((q) => q + 1); }}
           className="px-3 py-1 bg-emerald-200 rounded"
         >
           +
         </button>
-        {/* {product?.availability && (
-          <span className="text-gray-600">/ {product.availability} dispo</span>
-        )} */}
       </div>
 
-      {/* Prix + Commander */}
-      <div className="flex items-center justify-between">
-        <span className="text-xl font-bold text-emerald-700">
-          {product?.price} Ar
-        </span>
-        <button className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
+      {/* Commander Anyway Comment */}
+      <p className="text-xs text-gray-500 mb-4">
+        (Vous pourrez commander une quantité supérieure à celle indiquée.)
+      </p>
+
+      {/* Commander Button */}
+      <div className="flex justify-end">
+        <button
+          className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
+          disabled={!selectedPrice}
+        >
           <FaShoppingCart />
           Commander
         </button>
