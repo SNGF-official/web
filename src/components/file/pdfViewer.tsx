@@ -1,13 +1,12 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Document as Pdf, Page as PdfPage, pdfjs } from "react-pdf";
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url';
 import { Download, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface Pagination {
   current: number;
@@ -96,7 +95,7 @@ export const PdfViewer: FC<ViewerProps> = ({
   }, [pages.last, onNumPages]);
 
   return (
-    <div ref={pdfRef} className="w-full">
+    <div className="w-full max-w-full overflow-x-auto overflow-y-auto" ref={pdfRef}>
       <Card>
         {isPending && <Progress value={100} />}
         <div className="flex justify-between items-center px-4 pt-4">
@@ -128,7 +127,7 @@ export const PdfViewer: FC<ViewerProps> = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button className="cursor-pointer" variant="ghost" size="icon">
-                    <Download className="w-5 h-5"  />
+                    <Download className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -138,15 +137,15 @@ export const PdfViewer: FC<ViewerProps> = ({
             </a>
           </div>
         </div>
-        <CardContent className="flex justify-center items-center p-4">
-          {url ? (
+        <CardContent className="flex justify-center items-center p-4 w-full">
+        {url ? (
             <Pdf
               onLoadSuccess={({ numPages }) => {
                 setLastPage({ numPages });
                 stopLoading();
               }}
               noData={
-                noData || (
+                noData ?? (
                   <span className="text-sm text-muted-foreground">
                     En attente du document ...
                   </span>

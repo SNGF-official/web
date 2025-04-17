@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/carousel.tsx';
 import { Card, CardContent } from '@/components/ui/card.tsx';
 import { Button } from '@/components/ui/button.tsx';
-import ImageTest from '@/assets/product.png';
 import { motion, useInView } from "framer-motion";
 
 interface Plant {
@@ -19,11 +18,11 @@ interface Plant {
 }
 
 const plants: Plant[] = [
-  { id: 1, name: "Graine de Tournesol", image: ImageTest },
-  { id: 2, name: "Basilic Bio", image: ImageTest },
-  { id: 3, name: "Menthe Poivrée", image: ImageTest },
-  { id: 4, name: "Persil Géant", image: ImageTest },
-  { id: 5, name: "Tomate Cerise", image: ImageTest },
+  { id: 1, name: "Graine de Tournesol", image: "https://via.placeholder.com/80" },
+  { id: 2, name: "Basilic Bio", image: "https://via.placeholder.com/80" },
+  { id: 3, name: "Menthe Poivrée", image: "https://via.placeholder.com/80" },
+  { id: 4, name: "Persil Géant", image: "https://via.placeholder.com/80" },
+  { id: 5, name: "Tomate Cerise", image: "https://via.placeholder.com/80" },
 ];
 
 const AnimatedCard: React.FC<{ event: Plant; index: number }> = ({ event, index }) => {
