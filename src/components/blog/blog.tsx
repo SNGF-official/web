@@ -5,7 +5,10 @@ import { FaDownload, FaEye } from 'react-icons/fa';
 import { motion, useInView } from 'framer-motion';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus.ts';
 import { useBlog } from '@/hooks/useBlog';
-import { Blog as BlogType } from 'generated-client/models/Blog'; // Renommer pour éviter la confusion avec le composant
+import { Blog as BlogType } from 'generated-client/models/Blog';
+import { Link } from 'react-router-dom';
+import { FileInfo } from '../../../generated-client';
+import { useFileApi } from '@/hooks/useFileReader.ts';
 
 const blogsPerPage = 6;
 
@@ -16,7 +19,22 @@ interface AnimatedBlogCardProps {
 const AnimatedBlogCard: React.FC<AnimatedBlogCardProps> = ({ blog }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: false, margin: '-10% 0px' });
+  const [fileData, setFileData] = useState<FileInfo | null>(null);
+  const { getFileById } = useFileApi();
 
+  useEffect(() => {
+    if (blog.fileId) {
+      getFileById(blog.fileId)
+        .then((fileInfo) => {
+          if (fileInfo?.fileToUpload) {
+            setFileData(fileInfo);
+          }
+        })
+        .catch((error: unknown) => {
+          console.error('Error fetching file info:', error);
+        });
+    }
+  }, [blog.fileId, getFileById]);
   return (
     <motion.div
       ref={ref}
@@ -34,12 +52,22 @@ const AnimatedBlogCard: React.FC<AnimatedBlogCardProps> = ({ blog }) => {
         <h3 className="font-bold text-xl text-green-700 mb-2 line-clamp-2">{blog.title}</h3>
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{blog.description}</p>
         <div className="flex justify-between">
-          <button className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm">
+          <Link
+            to={`/blog/viewfile/${blog.fileId}`}
+            className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm"
+          >
             <FaEye /> Voir
-          </button>
-          <button className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm">
+          </Link>
+          <a
+            href={fileData?.fileToUpload}
+            target="_blank"
+            rel="noreferrer"
+            download={`${fileData?.name}.pdf`}
+            data-testid="download-link"
+            className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm"
+          >
             <FaDownload /> Télécharger
-          </button>
+          </a>
         </div>
       </div>
     </motion.div>

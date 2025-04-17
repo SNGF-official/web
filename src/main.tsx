@@ -22,6 +22,13 @@ const BlogPage = lazy(() =>
   }))
 );
 
+const ReadFilePage = lazy(() =>
+  import('./page/file/ReadFilePage.tsx').then((module) => ({
+    default: module.ReadFilePage,
+  }))
+);
+
+
 // eslint-disable-next-line react-refresh/only-export-components
 function ShopRoutes() {
   return (
@@ -30,6 +37,16 @@ function ShopRoutes() {
       <Route path="/all" element={<ShopPage />} />
       <Route path="/seeds" element={<SeedPage />} />
       <Route path="/plants" element={<PlantPage />} />
+      <Route path="/viewfile/:fileId" element={<ReadFilePage />} />
+    </Routes>
+  );
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function BlogRoutes() {
+  return (
+    <Routes>
+      <Route path="/viewfile/:fileId" element={<ReadFilePage />} />
     </Routes>
   );
 }
@@ -44,6 +61,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/shop/*" element={<ShopRoutes />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/*" element={<BlogRoutes />} />
         </Routes>
       </Suspense>
     </Router>

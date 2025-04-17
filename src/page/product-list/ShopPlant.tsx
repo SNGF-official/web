@@ -71,8 +71,9 @@ const PlantPage = () => {
 
   const resetSelection = useCallback(() => {
     setSelectedPlantId(undefined);
+    setSelectedPlant(undefined);
     setShowModal(false);
-  }, []);
+  }, [closeModal]);
 
   const navList = [
     { name: 'A propos', href: '/home#A propos' },
@@ -87,7 +88,7 @@ const PlantPage = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-    setPage(1); // Reset page on new search for proper filtering
+    setPage(1);
   };
 
   return (
@@ -119,10 +120,10 @@ const PlantPage = () => {
             {/* Add other mobile filter controls here */}
           </div>
 
-          <h2>Boutique Plantes</h2>
+          <h1 className="items-center text-center text-[var(--base-green)] text-6xl mb-2">Boutique Plantes</h1>
 
           {plants.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid lg:grid-cols-3 justify-center md:grid-cols-2 gap-4">
               {plants.map((plant) => (
                 <AnimatedPlantCard
                   key={plant.id}

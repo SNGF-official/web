@@ -33,10 +33,10 @@ const AnimatedPlantCard = ({
 };
 
 const SeedPage = () => {
-  const [selectedSeedId, setSelectedPlantId] = useState<string | undefined>(undefined);
-  const [selectedSeed, setSelectedPlant] = useState<Seed | undefined>(undefined);
+  const [selectedSeedId, setSelectedSeedId] = useState<string | undefined>(undefined);
+  const [selectedSeed, setSelectedSeed] = useState<Seed | undefined>(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [search,] = useState('');
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
@@ -50,7 +50,7 @@ const SeedPage = () => {
     try {
       const seedsApi = new SeedsApi();
       const details = await seedsApi.getSeedByID({ id: id });
-      setSelectedPlant(details);
+      setSelectedSeed(details);
       setShowModal(true);
     } catch (err) {
       console.error("Erreur lors du chargement des détails de la graine:", err);
@@ -63,13 +63,9 @@ const SeedPage = () => {
       .catch((reason: unknown) => { console.log(reason); });
   }, [fetchSeedDetails]);
 
-  const closeModal = useCallback(() => {
-    setSelectedPlantId(undefined);
-    setShowModal(false);
-  }, []);
-
   const resetSelection = useCallback(() => {
-    setSelectedPlantId(undefined);
+    setSelectedSeedId(undefined);
+    setSelectedSeed(undefined);
     setShowModal(false);
   }, []);
 
@@ -84,33 +80,51 @@ const SeedPage = () => {
     setPage((prevPage) => prevPage + 1);
   }, []);
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+    setPage(1);
+  };
+
   return (
     <>
       <NavigationBar elements={navList} />
       <div className="relative min-h-screen bg-white flex">
         {/* Sidebar desktop (vous pouvez ajouter des filtres spécifiques aux graines ici) */}
         <div className="hidden md:flex flex-col w-1/6 p-4">
-          {/* <Filters ... /> */}
+          <input
+            type="text"
+            placeholder="Rechercher par nom"
+            value={search}
+            onChange={handleSearchChange}
+            className="mb-2 p-2 border rounded"
+          />
         </div>
 
         {/* Partie produits (graines) */}
-        <div className={`w-full md:${selectedSeedId ? 'w-1/3' : 'w-5/6'} overflow-y-auto h-screen p-4 transition-all duration-300`}>
+        <div
+          className={`w-full md:${selectedSeedId ? 'w-1/3' : 'w-5/6'} overflow-y-auto h-screen p-4 transition-all duration-300`}>
           <div className="md:hidden mb-4">
-            {/* <Filters ... /> */}
+            <input
+              type="text"
+              placeholder="Rechercher par nom"
+              value={search}
+              onChange={handleSearchChange}
+              className="mb-2 p-2 border rounded w-full"
+            />
           </div>
 
-          <h2>Boutique Graines</h2>
+          <h1 className="items-center text-center text-[var(--base-green)] text-6xl mb-2">Boutique Graînes</h1>
 
           {loading ? (
             <div>Chargement des graines...</div>
           ) : error ? (
             <div>Erreur : {error}</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {seeds.map((plant) => (
+            <div className="grid lg:grid-cols-3 justify-center md:grid-cols-2 gap-4">
+              {seeds.map((seed) => (
                 <AnimatedPlantCard
-                  key={plant.id}
-                  seed={plant}
+                  key={seed.id}
+                  seed={seed}
                   onClick={handleSeedClick}
                 />
               ))}
@@ -132,7 +146,7 @@ const SeedPage = () => {
         <AnimatePresence>
           {selectedSeed && (
             <motion.div
-              key="plant-detail"
+              key="seed-detail"
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
@@ -155,7 +169,7 @@ const SeedPage = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center md:hidden z-50">
             <button
               className="absolute top-2 right-2 text-gray-500 text-xl"
-              onClick={closeModal}
+              onClick={()=> {setShowModal(false)}}
             >
               <XIcon />
             </button>
