@@ -49,7 +49,7 @@ const Landing = (): JSX.Element => {
     { name: 'A propos', href: '#A propos' },
     { name: 'Evenement', href: '#Evenement' },
     { name: 'Boutique', href: '/shop' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Articles', href: '/blog' },
     { name: 'FAQ', href: '#FAQ' },
   ];
 

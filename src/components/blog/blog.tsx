@@ -4,52 +4,37 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FaDownload, FaEye } from 'react-icons/fa';
 import { motion, useInView } from 'framer-motion';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus.ts';
-
-interface Blog {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
-  author: string;
-  published_at: string | null;
-  image_url: string | null;
-  status: 'ACTIVE' | 'INACTIVE';
-}
+import { useBlog } from '@/hooks/useBlog';
+import { Blog as BlogType } from 'generated-client/models/Blog';
+import { Link } from 'react-router-dom';
+import { FileInfo } from '../../../generated-client';
+import { useFileApi } from '@/hooks/useFileReader.ts';
 
 const blogsPerPage = 6;
 
-const fakeFetch = (): Promise<Blog[]> =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: '1',
-          title: 'La reforestation durable à Madagascar',
-          description: 'Un aperçu des stratégies durables utilisées par le SNGF pour restaurer les forêts.',
-          content: 'Lorem ipsum...',
-          author: 'Dr. R. Andriamanisa',
-          published_at: '2025-03-01T10:00:00Z',
-          image_url: 'https://source.unsplash.com/800x450/?forest',
-          status: 'ACTIVE',
-        },
-        {
-          id: '2',
-          title: 'Sélection des semences forestières',
-          description: 'Critères et méthodes pour garantir une bonne qualité de semences.',
-          content: 'Lorem ipsum...',
-          author: 'Ing. B. Rabe',
-          published_at: '2025-04-01T12:30:00Z',
-          image_url: 'https://source.unsplash.com/800x450/?seeds',
-          status: 'ACTIVE',
-        },
-      ]);
-    }, 1000);
-  });
+interface AnimatedBlogCardProps {
+  blog: BlogType;
+}
 
-const AnimatedBlogCard = ({ blog }: { blog: Blog }) => {
-  const ref = useRef(null);
+const AnimatedBlogCard: React.FC<AnimatedBlogCardProps> = ({ blog }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: false, margin: '-10% 0px' });
+  const [fileData, setFileData] = useState<FileInfo | null>(null);
+  const { getFileById } = useFileApi();
 
+  useEffect(() => {
+    if (blog.fileId) {
+      getFileById(blog.fileId)
+        .then((fileInfo) => {
+          if (fileInfo?.fileToUpload) {
+            setFileData(fileInfo);
+          }
+        })
+        .catch((error: unknown) => {
+          console.error('Error fetching file info:', error);
+        });
+    }
+  }, [blog.fileId, getFileById]);
   return (
     <motion.div
       ref={ref}
@@ -59,60 +44,64 @@ const AnimatedBlogCard = ({ blog }: { blog: Blog }) => {
       className="bg-white rounded-2xl shadow-xl overflow-hidden border border-green-200"
     >
       <img
-        src={blog.image_url ?? 'https://via.placeholder.com/300x180'}
+        src={blog.imageUrl ?? 'https://via.placeholder.com/300x180'}
         alt={blog.title}
         className="w-full h-48 object-cover rounded-t-2xl"
       />
       <div className="p-4 text-left">
         <h3 className="font-bold text-xl text-green-700 mb-2 line-clamp-2">{blog.title}</h3>
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{blog.description}</p>
-        <div className="text-xs text-gray-500 mb-3">
-          Par <span className="font-medium">{blog.author}</span> — {blog.published_at ?? 'Non publié'}
-        </div>
         <div className="flex justify-between">
-          <button className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm">
+          <Link
+            to={`/blog/viewfile/${blog.fileId}`}
+            className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm"
+          >
             <FaEye /> Voir
-          </button>
-          <button className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm">
+          </Link>
+          <a
+            href={fileData?.fileToUpload}
+            target="_blank"
+            rel="noreferrer"
+            download={`${fileData?.name}.pdf`}
+            data-testid="download-link"
+            className="cursor-pointer text-green-700 hover:text-green-900 flex items-center gap-1 text-sm"
+          >
             <FaDownload /> Télécharger
-          </button>
+          </a>
         </div>
       </div>
     </motion.div>
   );
 };
 
-const Blog = () => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
+const Blog: React.FC = () => {
+  const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [authorFilter, setAuthorFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
   const [visibleCount, setVisibleCount] = useState(blogsPerPage);
   const isOnline = useNetworkStatus();
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + blogsPerPage);
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fakeFetch();
-        setBlogs(data);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
+  const { blogs, loading, error } = useBlog({
+    keyword: search,
+    page: page,
+    pageSize: blogsPerPage,
+  });
+
+  const handleLoadMore = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    setPage(1);
+    setVisibleCount(blogsPerPage);
+  }, [search, authorFilter]);
 
   const filteredBlogs = blogs.filter((b) => {
-    const matchesSearch = b.title.toLowerCase().includes(search.toLowerCase()) || b.description.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch =
+      b.title.toLowerCase().includes(search.toLowerCase()) ||
+      b.description?.toLowerCase().includes(search.toLowerCase());
     const matchesAuthor = authorFilter ? b.author === authorFilter : true;
-    const matchesStatus = statusFilter ? b.status === statusFilter : true;
-    return matchesSearch && matchesAuthor && matchesStatus;
+    return matchesSearch && matchesAuthor ;
   });
 
   const uniqueAuthors = [...new Set(blogs.map((b) => b.author))];
@@ -127,17 +116,24 @@ const Blog = () => {
       <div className="flex min-h-screen w-screen bg-gradient-to-r from-green-50 to-green-100">
         {/* Sidebar desktop */}
         <div className="hidden md:flex flex-col w-1/6 p-4">
-          <Input value={search} onChange={(e) => { setSearch(e.target.value); }} placeholder="🔍 Rechercher..." />
-          <select value={authorFilter} onChange={(e) => { setAuthorFilter(e.target.value); }} className="mt-4">
+          <Input
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            placeholder="🔍 Rechercher..."
+          />
+          <select
+            value={authorFilter}
+            onChange={(e) => {
+              setAuthorFilter(e.target.value);
+            }}
+            className="mt-4"
+          >
             <option value="">Tous les auteurs</option>
             {uniqueAuthors.map((a) => (
               <option key={a}>{a}</option>
             ))}
-          </select>
-          <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); }} className="mt-2">
-            <option value="">Tous les statuts</option>
-            <option value="ACTIVE">Actif</option>
-            <option value="INACTIVE">Inactif</option>
           </select>
         </div>
 
@@ -145,34 +141,37 @@ const Blog = () => {
         <div className="w-full md:w-5/6 h-screen overflow-y-auto p-4">
           {/* Mobile filters */}
           <div className="md:hidden flex flex-col gap-4 mb-4">
-            <Input value={search} onChange={(e) => { setSearch(e.target.value); }} placeholder="🔍 Rechercher..." />
-            <select value={authorFilter} onChange={(e) => { setAuthorFilter(e.target.value); }}>
-              <option value="">Tous les auteurs</option>
-              {uniqueAuthors.map((a) => (
-                <option key={a}>{a}</option>
-              ))}
-            </select>
-            <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); }}>
-              <option value="">Tous les statuts</option>
-              <option value="ACTIVE">Actif</option>
-              <option value="INACTIVE">Inactif</option>
-            </select>
+            <Input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              placeholder="🔍 Rechercher..."
+            />
           </div>
 
           {/* Articles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="w-full bg-white p-4 rounded-2xl shadow-md animate-pulse">
-                  <Skeleton className="w-full h-48 mb-4 rounded-xl" />
-                  <Skeleton className="w-3/4 h-5 mb-2 rounded" />
-                  <Skeleton className="w-1/2 h-5 rounded" />
-                  <Skeleton className="w-full h-4 mt-2 rounded" />
-                </div>
-              ))
-              : filteredBlogs.slice(0, visibleCount).map((blog) => <AnimatedBlogCard key={blog.id} blog={blog} />)}
+            {loading && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(blogsPerPage)].map((_, i) => (
+                  <Skeleton key={i} className="h-[250px] w-full rounded-xl" />
+                ))}
+              </div>
+            )}
+
+            {!loading &&
+              filteredBlogs.slice(0, visibleCount).map((blog) => (
+                <AnimatedBlogCard key={blog.id} blog={blog} />
+              ))}
+
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && filteredBlogs.length === 0 && !error && (
+              <p>Aucun blog trouvé correspondant à vos critères.</p>
+            )}
           </div>
-          {visibleCount < filteredBlogs.length && (
+
+          {filteredBlogs.length > visibleCount && !loading && (
             <div className="flex justify-center mt-8">
               <button
                 onClick={handleLoadMore}

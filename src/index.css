@@ -14,4 +14,21 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+body, p, span {
+  font-family: "Merriweather", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+          "wdth" 100;
 }
