@@ -1,14 +1,14 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
-import { EventSortBy, getFilteredEvents, type Event } from '@/lib';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type Event, EventSortBy } from '@/lib';
 import { Event as ApiEvent } from 'generated-client/models/Event';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
+  type CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
 } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button.tsx';
 import { EventFilters } from '@/components/eventFilter.tsx';
@@ -32,17 +32,14 @@ export function EventCarousel() {
   const carouselRef = useRef<CarouselApi | null>(null);
 
   const { events, loading, error } = useEvent({
-    title: search,
-    sort_by: sortBy,
+    keyword: search,
+    sort_by: sortBy.includes('title') ? (sortBy.endsWith('asc') ? 'asc' : 'desc') : undefined,
   });
 
-  const uiEvents: Event[] = useMemo(() => {
-    return events.map((ev: ApiEvent) => transformApiEventToUIEvent(ev));
-  }, [events]);
 
   const displayedEvents = useMemo(() => {
-    return getFilteredEvents(uiEvents, search, sortBy);
-  }, [uiEvents, search, sortBy]);
+    return events.map((ev: ApiEvent) => transformApiEventToUIEvent(ev));
+  }, [events]);
 
   const handleSetApi = useCallback((api: CarouselApi) => {
     carouselRef.current = api;

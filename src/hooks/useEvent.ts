@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { EventsApi } from 'generated-client/apis';
+import { EventsApi, GetListEventStatusEnum } from 'generated-client/apis';
 import { Event } from 'generated-client/models/Event';
 
 const eventsApi = new EventsApi();
 
 interface UseEventParams {
-  title?: string;
-  sort_by?: string;
+  keyword?: string;
+  sort_by?: 'asc' | 'desc';
   date?: Date;
-  status?: 'ACTIVE' | 'INACTIVE';
-  operatorId?: number;
+  status?: GetListEventStatusEnum;
   page?: number;
   pageSize?: number;
 }
@@ -17,55 +16,54 @@ interface UseEventParams {
 interface UseEventResult {
   events: Event[];
   loading: boolean;
-  error: string;
+  error: string | null;
 }
 
 export const useEvent = ({
-                           title,
+                           keyword,
                            sort_by,
                            date,
                            status,
-                           operatorId,
                            page,
                            pageSize,
-                         }: UseEventParams): UseEventResult => {
+                         }: UseEventParams = {}): UseEventResult => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
-      setError('');
+      setError(null);
+
       try {
         const data = await eventsApi.getListEvent({
-          keyword: title,
+          keyword,
           date,
           status,
-          operatorId,
           page,
           pageSize,
         });
 
-        const sortedData =
-          sort_by && sort_by === 'asc'
+        const sortedEvents =
+          sort_by === 'asc'
             ? [...data].sort((a, b) => a.title.localeCompare(b.title))
-            : sort_by && sort_by === 'desc'
+            : sort_by === 'desc'
               ? [...data].sort((a, b) => b.title.localeCompare(a.title))
               : data;
 
-        setEvents(sortedData);
-      } catch (err) {
-        setError(`Failed to fetch events: ${String(err)}`);
+        setEvents(sortedEvents);
+      } catch (err: unknown) {
+        setError(`Failed to fetch events. ${JSON.stringify(err)}`);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEvents()
-      .then(r => { console.log(r); })
-      .catch((res: unknown) => { console.log(res); });
-  }, [title, sort_by, date, status, operatorId, page, pageSize]);
+    fetchEvents().then(r => { console.log(r); })
+      .catch((err: unknown) =>
+        { setError(`Failed to fetch events. ${JSON.stringify(err)}`)})
+  }, [keyword, sort_by, date, status, page, pageSize]);
 
   return { events, loading, error };
 };
